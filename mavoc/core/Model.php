@@ -324,8 +324,11 @@ class Model {
     // TODO: *Need to add protection for user passed in columns.
     public static function count($key = '', $value = '', $return_type = 'default') {
         if(is_string($value) && in_array($value, ['default', 'pagination']) && $return_type == 'default') {
+            // $key is probably an array and need to shift everything over.
             $return_type = $value;
         } elseif(is_array($value) && isset($value[0]) && is_numeric($value[0])) {
+            // $key is probably an array and return type involves pagination 
+            // 2024-02-06: need to examine this note more thoroughly to confirm this is accurate.
             $return_type = $value;
         } 
 
@@ -402,7 +405,7 @@ class Model {
                         }
                     }
                 } else {
-                    $sql = ' ' . $quote . $key . $quote . ' = ?';
+                    $sql .= ' ' . $quote . $key . $quote . ' = ?';
                     $values[] = $value;
                 }
                 $data = ao()->db->query($sql, $values);
