@@ -1,5 +1,5 @@
 .env.php
 .keys.php
 .plug.php
+.Debug.php
 vendor
-app/Debug.php

@@ -15,6 +15,7 @@ return [
     // App
     'APP_NAME' => 'Example', 
     'APP_ENV' => 'dev',
+    'APP_DEBUG' => false, // Loads the Debug.php file
     'APP_HOST' => 'www.example.com',
     'APP_SITE' => 'https://www.example.com',
     // Author information used on Terms and Privacy pages.
