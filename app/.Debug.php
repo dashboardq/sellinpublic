@@ -2,7 +2,9 @@
 
 namespace app;
 
-// Useful for temporary code additions. This file is in the .gitignore file.
+// This file (.Debug.php) should be moved to Debug.php to work. You will also need to set the
+// environment variable APP_DEBUG to true.
+// Useful for temporary code additions. The Debug.php file is in the .gitignore file.
 class Debug {
     public function init() {
         //ao()->filter('ao_some_hook', [$this, 'debug']);
@@ -18,6 +20,7 @@ class Debug {
     public function debug($data) {
         // Add some debug code here.
 
+        // Changed the file
         return $data;
     }
 }

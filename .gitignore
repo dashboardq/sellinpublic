@@ -2,3 +2,4 @@
 .keys.php
 .plug.php
 vendor
+app/Debug.php
