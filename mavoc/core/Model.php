@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeZone;
 
 class Model {
+    public $raw = [];
     public $data = [];
     public $id = 0;
     ////public $db;

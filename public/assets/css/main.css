@@ -7,7 +7,8 @@ textarea {
     padding: 1rem;
     max-width: 900px;
     margin: 0 auto;
-    padding-left: 74px;
+    padding-left: 78px;
+    overflow-wrap: break-word;
 }
 main .post {
     background: #ffffff;
@@ -26,8 +27,10 @@ main .pagination {
     text-align: right;
 }
 
-.meta {
-    display: relative;
+.meta:after {
+    content: '';
+    display: table;
+    clear: both;
 }
 .meta .profile {
     position: absolute;
