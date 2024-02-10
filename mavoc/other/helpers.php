@@ -51,29 +51,12 @@ if(!function_exists('dashify')) {
     }
 }
 
-if(!function_exists('nameMe')) {
-    function nameMe($input) {
-        $output = [];
-        foreach($input as $key => $item) {
-            if(is_array($item)) {
-                $output[$key] = nameMe($item);
-            } elseif($item instanceof DateTime) {
-                $output[$key] = $item->format('c');
-            } else {
-                $output[$key] = $item;
-            }
-        }
-
-        return $output;
-    }
-}
-
 if(!function_exists('data')) {
     function data($input) {   
         $output = [];
         if(is_array($input)) {
             foreach($input as $i => $item) {
-                $output[$i] = nameMe($item->data);
+                $output[$i] = simplify($item->data);
             }
         } else {
         }
@@ -324,6 +307,23 @@ if(!function_exists('returnTrue')) {
     function returnTrue() {   
         return true;
     }   
+}
+
+if(!function_exists('simplify')) {
+    function simplify($input) {
+        $output = [];
+        foreach($input as $key => $item) {
+            if(is_array($item)) {
+                $output[$key] = simplify($item);
+            } elseif($item instanceof DateTime) {
+                $output[$key] = $item->format('c');
+            } else {
+                $output[$key] = $item;
+            }
+        }
+
+        return $output;
+    }
 }
 
 if(!function_exists('underscorify')) {
