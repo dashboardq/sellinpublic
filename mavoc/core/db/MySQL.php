@@ -69,11 +69,11 @@ class MySQL {
                 $sql .= "DEFAULT '" . 0 . " '";
             }
         } elseif($type == 'datetime') {
-            $sql .= '`' . $key . '` timestamp ';
+            $sql .= '`' . $key . '` datetime ';
             if(isset($extras['default'])) {
                 $sql .= "DEFAULT '" . $extras['default'] . " '";
-            //} else {
-                //$sql .= "DEFAULT NULL ";
+            } else {
+                $sql .= "DEFAULT NULL ";
             }
         } elseif($type == 'geometry') {
             $sql .= '`' . $key . '` geometry ';

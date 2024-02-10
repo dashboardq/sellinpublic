@@ -16,7 +16,7 @@ class AuthController {
 
         $res->fields['username'] = $usernames[0]->data['name'];
         $res->fields['name'] = $req->user->data['name'];
-        $res->fields['email'] = $req->user->data['email'];
+        $res->fields['email'] = $req->user->all['email'];
 
         return ['title' => 'Account'];
     }

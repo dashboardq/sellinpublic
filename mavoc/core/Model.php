@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeZone;
 
 class Model {
+    public $all = [];
     public $raw = [];
     public $data = [];
     public $id = 0;
@@ -14,6 +15,7 @@ class Model {
     // but this could cause issues if the table is dynamic.
     public static $table = '';
     public static $order = [];
+    public static $private = [];
 
     public $tbl = '';
     public $clmns = [];
@@ -22,7 +24,8 @@ class Model {
 
     public function __construct($args = []) {
         // TODO: Restrict this to only valid args.
-        $this->data = $args;
+        $this->raw = $args;
+        $this->all = $args;
         if(isset($args['id'])) {
             $this->id = $args['id'];
         }
@@ -50,26 +53,30 @@ class Model {
                 ao()->hook('ao_model_call_process', true)
                 && ao()->hook('ao_model_call_process_' . $this->tbl, true)
             ) {
-                $this->data = $this->process($this->data);
+                $this->all = $this->process($this->all);
             }
             if(
                 ao()->hook('ao_model_process_ints', true)
                 && ao()->hook('ao_model_process_ints_' . $this->tbl, true)
             ) {
-                $this->data = $this->processInts($this->data);
+                $this->all = $this->processInts($this->all);
             }
             if(
                 ao()->hook('ao_model_process_cents', true)
                 && ao()->hook('ao_model_process_cents_' . $this->tbl, true)
             ) {
-                $this->data = $this->processCents($this->data);
+                $this->all = $this->processCents($this->all);
             }
             if(
                 ao()->hook('ao_model_process_dates', true)
                 && ao()->hook('ao_model_process_dates_' . $this->tbl, true)
             ) {
-                $this->data = $this->processDates($this->data);
+                $this->all = $this->processDates($this->all);
             }
+            $this->all = ao()->hook('ao_model_process_all', $this->all);
+            $this->all = ao()->hook('ao_model_process_all_' . $this->tbl, $this->all);
+
+            $this->data = $this->hide($this->all);
             $this->data = ao()->hook('ao_model_process_data', $this->data);
             $this->data = ao()->hook('ao_model_process_data_' . $this->tbl, $this->data);
 
@@ -78,29 +85,16 @@ class Model {
         }   
     }   
 
-    public function init() {
-    }
+    public function hide($all) {
+        $data = [];
+        $class = get_called_class();
+        $table = self::setTable($class);
+        $private = self::setPrivate($table);
 
-    public function process($data) {
-        return $data;
-    }
-
-    public function processDates($data) {
-        $utc = new DateTimeZone('UTC');
-
-        foreach($data as $key => $value) {
-            if(is_string($value) && substr($key, -3) == '_at') {
-                $dt_utc = new DateTime($value, $utc);
-                $data[$key] = $dt_utc;
-
-                if(ao()->session_initialized) {
-                    $timezone = ao()->hook('ao_model_process_dates_timezone', 'UTC', $this->tbl);
-                    $tz = new DateTimeZone($timezone);
-                    $dt_tz = new DateTime($value);
-                    $dt_tz->setTimezone($tz);
-                    $data[substr($key, 0, -3) . '_tz'] = $dt_tz;
-                } else {
-                    $data[substr($key, 0, -3) . '_tz'] = $dt_utc;
+        if(is_array($private)) {
+            foreach($all as $key => $field) {
+                if(!in_array($key, $private)) {
+                    $data[$key] = $field;
                 }
             }
         }
@@ -108,28 +102,58 @@ class Model {
         return $data;
     }
 
-    public function processCents($data) {
-        foreach($data as $key => $value) {
-            if(is_int($value) && substr($key, -6) == '_cents') {
-                $data[substr($key, 0, -5)] = $value / 100;
-            }
-        }
-
-        return $data;
+    public function init() {
     }
 
-    public function processInts($data) {
-        foreach($data as $key => $value) {
-            $suffix = substr($key, -5);
-            if(is_int($value) && $suffix == '_int2') {
-                $data[substr($key, 0, -5)] = $value / 100;
-            }
-            if(is_int($value) && $suffix == '_int3') {
-                $data[substr($key, 0, -5)] = $value / 1000;
+    public function process($all) {
+        return $all;
+    }
+
+    public function processDates($all) {
+        $utc = new DateTimeZone('UTC');
+
+        foreach($all as $key => $value) {
+            if(is_string($value) && substr($key, -3) == '_at') {
+                $dt_utc = new DateTime($value, $utc);
+                $all[$key] = $dt_utc;
+
+                if(ao()->session_initialized) {
+                    $timezone = ao()->hook('ao_model_process_dates_timezone', 'UTC', $this->tbl);
+                    $tz = new DateTimeZone($timezone);
+                    $dt_tz = new DateTime($value);
+                    $dt_tz->setTimezone($tz);
+                    $all[substr($key, 0, -3) . '_tz'] = $dt_tz;
+                } else {
+                    $all[substr($key, 0, -3) . '_tz'] = $dt_utc;
+                }
             }
         }
 
-        return $data;
+        return $all;
+    }
+
+    public function processCents($all) {
+        foreach($all as $key => $value) {
+            if(is_int($value) && substr($key, -6) == '_cents') {
+                $all[substr($key, 0, -5)] = $value / 100;
+            }
+        }
+
+        return $all;
+    }
+
+    public function processInts($all) {
+        foreach($all as $key => $value) {
+            $suffix = substr($key, -5);
+            if(is_int($value) && $suffix == '_int2') {
+                $all[substr($key, 0, -5)] = $value / 100;
+            }
+            if(is_int($value) && $suffix == '_int3') {
+                $all[substr($key, 0, -5)] = $value / 1000;
+            }
+        }
+
+        return $all;
     }
 
     public static function all($return_type = 'default') {
@@ -165,12 +189,18 @@ class Model {
                 $sql .= ' LIMIT ' . $limit;
             }
 
-            $data = ao()->db->query($sql);
+            $raw = ao()->db->query($sql);
 
-            foreach($data as $item) {
-                if($return_type == 'data') {
+            foreach($raw as $item) {
+                if($return_type == 'all') {
+                    $item = new $class($item);
+                    $output[] = $item->all;
+                } elseif($return_type == 'data') {
                     $item = new $class($item);
                     $output[] = $item->data;
+                } elseif($return_type == 'raw') {
+                    $item = new $class($item);
+                    $output[] = $item->raw;
                 } else {
                     $output[] = new $class($item);
                 }
@@ -181,7 +211,7 @@ class Model {
     }
 
     public static function by($key, $value = '', $return_type = 'default') {
-        if(is_string($value) && in_array($value, ['data', 'default']) && $return_type == 'default') {
+        if(is_string($value) && in_array($value, ['all', 'data', 'default', 'raw']) && $return_type == 'default') {
             $return_type = $value;
         } elseif(is_array($value) && isset($value[0]) && is_numeric($value[0])) {
             $return_type = $value;
@@ -226,7 +256,7 @@ class Model {
 
                 $sql .= ' LIMIT 1';
 
-                $data = ao()->db->query($sql, $values);
+                $raw = ao()->db->query($sql, $values);
             } else {
                 $sql = 'SELECT * FROM ' . $table . ' WHERE';
                 if(is_array($value) && isset($value[0]) && isset($value[1]) && in_array($value[0], self::$compare)) {
@@ -249,14 +279,20 @@ class Model {
 
                 $sql .= ' LIMIT 1';
 
-                $data = ao()->db->query($sql, $values);
+                $raw = ao()->db->query($sql, $values);
             }
-            if(count($data)) {
-                if($return_type == 'data') {
-                    $item = new $class($data[0]);
+            if(count($raw)) {
+                if($return_type == 'all') {
+                    $item = new $class($raw[0]);
+                    $output = $item->all;
+                } elseif($return_type == 'data') {
+                    $item = new $class($raw[0]);
                     $output = $item->data;
+                } elseif($return_type == 'raw') {
+                    $item = new $class($raw[0]);
+                    $output = $item->raw;
                 } else {
-                    $output = new $class($data[0]);
+                    $output = new $class($raw[0]);
                 }
             }
         }
@@ -274,7 +310,7 @@ class Model {
         $output = null;
         if($table) {
             if(is_array($key)) {
-                if(is_string($value) && in_array($value, ['data', 'default'])) {
+                if(is_string($value) && in_array($value, ['all', 'data', 'default', 'raw'])) {
                     $return_type = $value;
                 }  
 
@@ -301,20 +337,26 @@ class Model {
                     $first = false;
                 }
                 $sql .= ' LIMIT 1';
-                $data = ao()->db->query($sql, $values);
+                $raw = ao()->db->query($sql, $values);
             } else {
                 if(is_array($value) && count($value) == 2) {
-                    $data = ao()->db->query('SELECT * FROM ' . $table . ' WHERE ' . $quote . $key . $quote . ' ' . $value[0] . ' ? LIMIT 1', $value[1]);
+                    $raw = ao()->db->query('SELECT * FROM ' . $table . ' WHERE ' . $quote . $key . $quote . ' ' . $value[0] . ' ? LIMIT 1', $value[1]);
                 } else {
-                    $data = ao()->db->query('SELECT * FROM ' . $table . ' WHERE ' . $quote . $key . $quote . ' = ? LIMIT 1', $value);
+                    $raw = ao()->db->query('SELECT * FROM ' . $table . ' WHERE ' . $quote . $key . $quote . ' = ? LIMIT 1', $value);
                 }
             }
-            if(count($data)) {
-                if($return_type == 'data') {
-                    $item = new $class($data[0]);
+            if(count($raw)) {
+                if($return_type == 'all') {
+                    $item = new $class($raw[0]);
+                    $output = $item->all;
+                } elseif($return_type == 'data') {
+                    $item = new $class($raw[0]);
                     $output = $item->data;
+                } elseif($return_type == 'data') {
+                    $item = new $class($raw[0]);
+                    $output = $item->raw;
                 } else {
-                    $output = new $class($data[0]);
+                    $output = new $class($raw[0]);
                 }
             }
         }
@@ -389,7 +431,7 @@ class Model {
                     }
                 }
 
-                $data = ao()->db->query($sql, $values);
+                $raw = ao()->db->query($sql, $values);
             } elseif($key) {
                 $sql = 'SELECT COUNT(id) as total FROM ' . $table . ' WHERE';
                 if(is_array($value) && isset($value[0]) && isset($value[1]) && in_array($value[0], self::$compare)) {
@@ -409,15 +451,15 @@ class Model {
                     $sql .= ' ' . $quote . $key . $quote . ' = ?';
                     $values[] = $value;
                 }
-                $data = ao()->db->query($sql, $values);
+                $raw = ao()->db->query($sql, $values);
             } else {
                 $sql = 'SELECT COUNT(id) as total FROM ' . $table;
-                $data = ao()->db->query($sql);
+                $raw = ao()->db->query($sql);
             }
 
-            if(isset($data[0]['total']) && $data[0]['total'] > 0) {
+            if(isset($raw[0]['total']) && $raw[0]['total'] > 0) {
                 if($return_type == 'pagination') {
-                    $total_results = $data[0]['total'];
+                    $total_results = $raw[0]['total'];
                     $output['total_results'] = $total_results;
                     $output['total_pages'] = ceil($total_results / $limit);
                     if($page > 1) {
@@ -448,7 +490,7 @@ class Model {
                         $output['url_previous'] = $url_stripped . '&page=' . urlencode($output['page_previous']);
                     }
                 } else {
-                    $output = $data[0]['total'];
+                    $output = $raw[0]['total'];
                 }
             }
         }
@@ -485,7 +527,7 @@ class Model {
                         $values[] = $v;
                     }   
                 }   
-                $data = ao()->db->query($sql, $values);
+                $raw = ao()->db->query($sql, $values);
             } else {
                 ao()->db->query('DELETE FROM ' . $table . ' WHERE id = ?', $id);
             }   
@@ -499,13 +541,19 @@ class Model {
         $item = null;
         $output = null;
         if($table) {
-            $data = ao()->db->query('SELECT * FROM ' . $table . ' WHERE id = ? LIMIT 1', $id);
-            if(count($data)) {
-                if($return_type == 'data') {
-                    $item = new $class($data[0]);
+            $raw = ao()->db->query('SELECT * FROM ' . $table . ' WHERE id = ? LIMIT 1', $id);
+            if(count($raw)) {
+                if($return_type == 'all') {
+                    $item = new $class($raw[0]);
+                    $output = $item->all;
+                } elseif($return_type == 'data') {
+                    $item = new $class($raw[0]);
                     $output = $item->data;
+                } elseif($return_type == 'raw') {
+                    $item = new $class($raw[0]);
+                    $output = $item->raw;
                 } else {
-                    $output = new $class($data[0]);
+                    $output = new $class($raw[0]);
                 }
             }
         }
@@ -527,12 +575,12 @@ class Model {
 
         ao()->db->insert($this->tbl, $input);
 
-        //$this->data['id'] = $this->db->lastInsertId();
-        $this->data['id'] = ao()->db->lastInsertId();
-        $this->id = $this->data['id'];
+        //$this->all['id'] = $this->db->lastInsertId();
+        $this->all['id'] = ao()->db->lastInsertId();
+        $this->id = $this->all['id'];
 
-        // Reload the data
-        $this->data = self::find($this->id)->data;
+        // Reload the all
+        $this->all = self::find($this->id)->all;
     }
 
     public static function query() {
@@ -541,15 +589,21 @@ class Model {
         $output = [];
 
         $args = func_get_args();
-        $data = ao()->db->query($args[0], array_slice($args, 1));
+        $raw = ao()->db->query($args[0], array_slice($args, 1));
 
-        foreach($data as $item) {
+        foreach($raw as $item) {
             $output[] = new $class($item);
 
             /*
-            if($return_type == 'data') {
+            if($return_type == 'all') {
+                $item = new $class($item);
+                $output[] = $item->all;
+            } elseif($return_type == 'data') {
                 $item = new $class($item);
                 $output[] = $item->data;
+            } elseif($return_type == 'raw') {
+                $item = new $class($item);
+                $output[] = $item->raw;
             } else {
                 $output[] = new $class($item);
             }
@@ -565,30 +619,30 @@ class Model {
         // 2. These hooks are now called with the update() and insert() methods when the data is reloaded.
         //
         // Process the data both before and after.
-        //$this->data = ao()->hook('ao_model_process_data', $this->data);
-        //$this->data = ao()->hook('ao_model_process_' . $this->tbl . '_data', $this->data);
-        if(isset($this->data['id'])) {
+        //$this->all = ao()->hook('ao_model_process_all', $this->all);
+        //$this->all = ao()->hook('ao_model_process_' . $this->tbl . '_all', $this->all);
+        if(isset($this->all['id'])) {
             $class = get_called_class();
-            $item = $class::find($this->data['id']);
+            $item = $class::find($this->all['id']);
 
             // If item exists, run update otherwise run insert.
             if($item) {
                 // The old updated_at value needs to be overwritten so unsetting it here.
                 // If the updated_at value needs to change then the update() method should be called directly.
                 // Remove the updated_at date.
-                unset($this->data['updated_at']);
-                $this->update($this->data);
+                unset($this->all['updated_at']);
+                $this->update($this->all);
             } else {
-                $this->insert($this->data);
+                $this->insert($this->all);
             }
         } else {
-            $this->insert($this->data);
+            $this->insert($this->all);
         }
 
-        //$this->data = ao()->hook('ao_model_process_data', $this->data);
-        //$this->data = ao()->hook('ao_model_process_' . $this->tbl . '_data', $this->data);
-        $this->data = ao()->hook('ao_model_save_data', $this->data);
-        $this->data = ao()->hook('ao_model_save_' . $this->tbl . '_data', $this->data);
+        //$this->all = ao()->hook('ao_model_process_all', $this->all);
+        //$this->all = ao()->hook('ao_model_process_' . $this->tbl . '_all', $this->all);
+        $this->all = ao()->hook('ao_model_save_all', $this->all);
+        $this->all = ao()->hook('ao_model_save_' . $this->tbl . '_all', $this->all);
     }
 
     public static function setItem($item, $return_type, $table) {
@@ -603,7 +657,7 @@ class Model {
                 $count == 4 
                 && is_numeric($return_type[0])
                 && is_numeric($return_type[1])
-                && in_array($return_type[2], ['default', 'data', 'pagination'])
+                && in_array($return_type[2], ['all', 'data', 'default', 'pagination', 'raw'])
                 && is_string($return_type[3])
             ) {
                 $limit = $return_type[0];
@@ -617,7 +671,7 @@ class Model {
                 $count == 3 
                 && is_numeric($return_type[0])
                 && is_numeric($return_type[1])
-                && in_array($return_type[2], ['default', 'data', 'pagination'])
+                && in_array($return_type[2], ['all', 'data', 'default', 'pagination', 'raw'])
             ) {
                 $limit = $return_type[0];
                 $page = $return_type[1];
@@ -635,7 +689,7 @@ class Model {
             } elseif(
                 $count == 2 
                 && is_numeric($return_type[0])
-                && in_array($return_type[1], ['default', 'data', 'pagination'])
+                && in_array($return_type[1], ['all', 'data', 'default', 'pagination', 'raw'])
             ) {
                 $limit = $return_type[0];
                 $return_type = $return_type[1];
@@ -691,6 +745,14 @@ class Model {
         return self::setItem('page', $return_type, $table);
     }
 
+    public static function setPrivate($table) {
+        $class = get_called_class();
+        $private = $class::$private;
+        $private = ao()->hook('ao_model_private', $private, $table);
+        $private = ao()->hook('ao_model_private_' . $table, $private, $table);
+        return $private;
+    }
+
     public static function setReturnType($return_type, $table) {
         return self::setItem('return_type', $return_type, $table);
     }
@@ -722,7 +784,7 @@ class Model {
         ao()->db->update($this->tbl, $this->id, $input);
 
         // Reload the data
-        $this->data = self::find($this->id)->data;
+        $this->all = self::find($this->id)->all;
     }
 
     public static function updateWhere($input = [], $key = '', $value = '') {
@@ -795,7 +857,7 @@ class Model {
     // Note that pagination will have performance issues with large datasets:
     // https://mysql.rjweb.org/doc.php/pagination
     public static function where($key, $value = '', $return_type = 'default') {
-        if(is_string($value) && in_array($value, ['data', 'default']) && $return_type == 'default') {
+        if(is_string($value) && in_array($value, ['all', 'data', 'default', 'raw']) && $return_type == 'default') {
             $return_type = $value;
         } elseif(is_array($value) && isset($value[0]) && is_numeric($value[0])) {
             $return_type = $value;
@@ -861,7 +923,7 @@ class Model {
                     $sql .= ' LIMIT ' . $limit;
                 }
 
-                $data = ao()->db->query($sql, $values);
+                $raw = ao()->db->query($sql, $values);
             } else {
                 $sql = 'SELECT * FROM ' . $table . ' WHERE';
                 if(is_array($value) && isset($value[0]) && isset($value[1]) && in_array($value[0], self::$compare)) {
@@ -902,12 +964,18 @@ class Model {
                     $sql .= ' LIMIT ' . $limit;
                 }
 
-                $data = ao()->db->query($sql, $values);
+                $raw = ao()->db->query($sql, $values);
             }
-            foreach($data as $item) {
-                if($return_type == 'data') {
+            foreach($raw as $item) {
+                if($return_type == 'all') {
+                    $item = new $class($item);
+                    $output[] = $item->all;
+                } elseif($return_type == 'data') {
                     $item = new $class($item);
                     $output[] = $item->data;
+                } elseif($return_type == 'raw') {
+                    $item = new $class($item);
+                    $output[] = $item->raw;
                 } else {
                     $output[] = new $class($item);
                 }
@@ -921,7 +989,7 @@ class Model {
         // This is set up to handle pagination too.
         // If isset($and[0]) - if '0' is a $key, then it is not a normal $and array that would use string keys.
         if(
-            (is_string($and) && in_array($and, ['data', 'default'])) 
+            (is_string($and) && in_array($and, ['all', 'data', 'default', 'raw'])) 
             || (is_array($and) && isset($and[0]))
         ) {
             $return_type = $and;
@@ -988,13 +1056,19 @@ class Model {
                 $sql .= ' LIMIT ' . $limit;
             }
 
-            //$data = ao()->db->query($sql, $list);
-            $data = ao()->db->query($sql, $values);
+            //$raw = ao()->db->query($sql, $list);
+            $raw = ao()->db->query($sql, $values);
 
-            foreach($data as $item) {
-                if($return_type == 'data') {
+            foreach($raw as $item) {
+                if($return_type == 'all') {
+                    $item = new $class($item);
+                    $output[] = $item->all;
+                } elseif($return_type == 'data') {
                     $item = new $class($item);
                     $output[] = $item->data;
+                } elseif($return_type == 'raw') {
+                    $item = new $class($item);
+                    $output[] = $item->raw;
                 } else {
                     $output[] = new $class($item);
                 }

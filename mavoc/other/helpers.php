@@ -51,6 +51,36 @@ if(!function_exists('dashify')) {
     }
 }
 
+if(!function_exists('nameMe')) {
+    function nameMe($input) {
+        $output = [];
+        foreach($input as $key => $item) {
+            if(is_array($item)) {
+                $output[$key] = nameMe($item);
+            } elseif($item instanceof DateTime) {
+                $output[$key] = $item->format('c');
+            } else {
+                $output[$key] = $item;
+            }
+        }
+
+        return $output;
+    }
+}
+
+if(!function_exists('data')) {
+    function data($input) {   
+        $output = [];
+        if(is_array($input)) {
+            foreach($input as $i => $item) {
+                $output[$i] = nameMe($item->data);
+            }
+        } else {
+        }
+        return $output;
+    }   
+} 
+
 if(!function_exists('dd')) {
     function dd($input) {
         echo '<pre>'; 
@@ -204,6 +234,14 @@ if(!function_exists('_esc')) {
 if(!function_exists('esc')) {
     function esc($value, $double_encode = true) {   
         echo _esc($value, $double_encode);
+    }   
+} 
+
+if(!function_exists('meta')) {
+    function meta($pagination) {   
+        $output = [];
+        $output = $pagination;
+        return $output;
     }   
 } 
 

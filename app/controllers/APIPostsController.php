@@ -18,6 +18,10 @@ class APIPostsController {
         $posts = Post::where($args, [$per_page, $page]);
         $pagination = Post::count($args, [$per_page, $page, 'pagination', $req->path]); 
 
+        $output = [];
+        $output['meta'] = meta($pagination);
+        $output['data'] = data($posts);
+        dd($output);
         return compact('pagination', 'posts');
     }
 }
