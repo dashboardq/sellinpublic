@@ -614,6 +614,9 @@ class Model {
     }
 
     public function save() {
+        $this->data = ao()->hook('ao_model_save_data', $this->data);
+        $this->data = ao()->hook('ao_model_save_' . $this->tbl . '_data', $this->data);
+
         // Removing the process hooks both before and after:
         // 1. It does not make sense to use the same hook twice.
         // 2. These hooks are now called with the update() and insert() methods when the data is reloaded.
@@ -621,28 +624,23 @@ class Model {
         // Process the data both before and after.
         //$this->all = ao()->hook('ao_model_process_all', $this->all);
         //$this->all = ao()->hook('ao_model_process_' . $this->tbl . '_all', $this->all);
-        if(isset($this->all['id'])) {
+        if(isset($this->data['id'])) {
             $class = get_called_class();
-            $item = $class::find($this->all['id']);
+            $item = $class::find($this->data['id']);
 
             // If item exists, run update otherwise run insert.
             if($item) {
                 // The old updated_at value needs to be overwritten so unsetting it here.
                 // If the updated_at value needs to change then the update() method should be called directly.
                 // Remove the updated_at date.
-                unset($this->all['updated_at']);
-                $this->update($this->all);
+                unset($this->data['updated_at']);
+                $this->update($this->data);
             } else {
-                $this->insert($this->all);
+                $this->insert($this->data);
             }
         } else {
-            $this->insert($this->all);
+            $this->insert($this->data);
         }
-
-        //$this->all = ao()->hook('ao_model_process_all', $this->all);
-        //$this->all = ao()->hook('ao_model_process_' . $this->tbl . '_all', $this->all);
-        $this->all = ao()->hook('ao_model_save_all', $this->all);
-        $this->all = ao()->hook('ao_model_save_' . $this->tbl . '_all', $this->all);
     }
 
     public static function setItem($item, $return_type, $table) {
