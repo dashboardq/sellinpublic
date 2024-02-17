@@ -472,8 +472,8 @@ class Model {
                     } else {
                         $output['page_next'] = $output['total_pages'];
                     }
-                    $output['page_current'] = $page;
-                    $output['current_page'] = $page;
+                    $output['page_current'] = (int) $page;
+                    $output['current_page'] = (int) $page;
                     $output['current_result'] = (($page - 1) * $limit) + 1;
                     $output['current_result_first'] = (($page - 1) * $limit) + 1;
                     if($page < $output['total_pages']) {
@@ -579,8 +579,11 @@ class Model {
         $this->all['id'] = ao()->db->lastInsertId();
         $this->id = $this->all['id'];
 
-        // Reload the all
-        $this->all = self::find($this->id)->all;
+        // Reload the all, raw, and data
+        $item = self::find($this->id);
+        $this->all = $item->all;
+        $this->raw = $item->raw;
+        $this->data = $item->data;
     }
 
     public static function query() {
@@ -636,10 +639,10 @@ class Model {
                 unset($this->data['updated_at']);
                 $this->update($this->data);
             } else {
-                $this->insert($this->data);
+                $this->insert($this->all);
             }
         } else {
-            $this->insert($this->data);
+            $this->insert($this->all);
         }
     }
 
@@ -781,8 +784,11 @@ class Model {
 
         ao()->db->update($this->tbl, $this->id, $input);
 
-        // Reload the data
-        $this->all = self::find($this->id)->all;
+        // Reload the all, raw, and data
+        $item = self::find($this->id);
+        $this->all = $item->all;
+        $this->raw = $item->raw;
+        $this->data = $item->data;
     }
 
     public static function updateWhere($input = [], $key = '', $value = '') {

@@ -4,27 +4,25 @@
         <?php $res->partial('head'); ?>
     </head>
     <body class="<?php $res->pathClass(); ?>">
-        <div id="app">
+        <?php $res->partial('view_app_before'); ?>
+        <div id="app" class="columns_2">
             <?php $res->partial('header'); ?>
+            <?php $res->partial('sidebar_account'); ?> 
             <main>
                 <div class="page">
-                    <h2>Add A Post</h2>
-
-                    <div class="notice warn">
-                        <p>New accounts have a 48 hour delay until the post will become public.</p>
-                    </div>
+                    <h2>Create API Key</h2>
 
                     <?php $res->html->messages(); ?>
                     <form method="POST">
-                        <textarea name="post" placeholder="Introduce yourself or post an update..."></textarea>
-                        <p>240 characters max</p>
+                        <?php $res->html->text('Name', 'name'); ?>
 
-                        <?php $res->html->submit('Post'); ?>
+                        <?php $res->html->submit('Create'); ?>
                     </form>
                 </div>
             </main>
             <?php $res->partial('footer'); ?>
         </div>
+        <?php $res->partial('view_app_after'); ?>
 		<?php $res->partial('foot'); ?>
     </body>
 </html>

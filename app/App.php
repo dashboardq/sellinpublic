@@ -2,8 +2,11 @@
 
 namespace app;
 
+use app\models\Restriction;
 use app\models\Setting;
 use app\models\User;
+
+use mavoc\core\Exception;
 
 use DateTime;
 use DateTimeZone;
@@ -20,25 +23,26 @@ class App {
         ao()->filter('ao_response_partial_args', [$this, 'cacheDate']);
         ao()->filter('ao_model_process_dates_timezone', [$this, 'processTimezone']);
 
-        if(ao()->env('APP_DEBUG')) {
-            // Maybe have this fixed with autoloading
-            $debug_file = ao()->env('AO_BASE_DIR') . DIRECTORY_SEPARATOR . '.Debug.php';
-            $debug_file = ao()->hook('app_debug_file', $debug_file);
-            if(is_file($debug_file)) {
-                require_once $debug_file;
-                $this->debug = new Debug();
-                $this->debug = ao()->hook('app_debug', $this->debug);
-                $func = [$this->debug, 'init'];
-                $func = ao()->hook('app_debug_init', $func);
-                call_user_func($func);
-                $this->debug = ao()->hook('app_debug_initialized', $this->debug);
+        ao()->filter('helper_wordify_output', [$this, 'wordify']);
+        ao()->filter('helper_split_input', [$this, 'splitInput']);
+
+        ao()->filter('ao_router_logged_in_private', [$this, 'apiRestrictionCheck']);
+    }
+
+    // Checks if the API access allows private access.
+    public function apiRestrictionCheck($user_id, $req, $res) {
+        if($req->type == 'api') {
+            $restriction = Restriction::get($user_id);
+            if($restriction['premium_level'] == 0) {
+                throw new Exception('In order to access a private endpoint you need to have premium subscription access.', '', 401, 'json');
             }
         }
+        return $user_id;
     }
 
     public function cacheDate($vars, $view, $req, $res) {
         if($view == 'head' || $view == 'foot') {
-            $vars['cache_date'] = '2024-02-07';
+            $vars['cache_date'] = '2024-02-15';
         }
 
         return $vars;
@@ -66,5 +70,18 @@ class App {
 
         $timezone = Setting::get(ao()->request->user_id, 'timezone');
         return $timezone;
+    }
+
+    public function splitInput($input) {
+        if(substr($input, 0, 3) == 'API') {
+            $input = 'Api' . substr($input, 3);
+        }
+        return $input;
+    }
+
+    // Uppercase the title
+    public function wordify($input) {
+        $output = str_replace('Sellinpublic', 'SellInPublic', $input);
+        return $output;
     }
 }

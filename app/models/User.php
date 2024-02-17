@@ -32,6 +32,18 @@ class User extends Model {
 
         $item = new User($args);
         $item->save();
+
+        // The create() method is really more like an upsert method. I need to eventually fix this
+        // but for now lets just make sure the account info hasn't been created before trying to
+        // create it again and overriding already set info.
+        if(!$item->data['account']) {
+            $args = [];
+            $args['user_id'] = $item->id;
+            $args['display_name'] = $item->data['name'];
+            $args['bio'] = '';
+            $account = Account::create($args);
+        }
+
         return $item;
     }
 
@@ -136,6 +148,13 @@ class User extends Model {
 
     public function logout() {
         ao()->session->logout();
+    }
+
+    public function process($data) {
+        $account = Account::by('user_id', $data['id']);
+        $data['account'] = $account->data;
+
+        return $data;
     }
 
     public static function resetPassword($user_id, $token, $new_password) {

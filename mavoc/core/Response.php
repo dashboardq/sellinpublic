@@ -4,12 +4,12 @@ namespace mavoc\core;
 
 class Response {
     public $output = ''; 
-
     public $args = []; 
     public $fields = []; 
     public $html; 
     public $req; 
     public $session; 
+    public $type = 'web';
 
     public function __construct() {
         register_shutdown_function([$this, 'send']);
@@ -34,6 +34,21 @@ class Response {
             } else {
                 $output['messages'] = [$message];
             }
+            http_response_code(400);
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($output);
+            exit;
+        } elseif($this->type == 'api') {
+            $output = [];
+            $output['status'] = 'error';
+            if(is_array($message)) {
+                $output['messages'] = $message;
+            } else {
+                $output['messages'] = [$message];
+            }
+            $output['meta'] = new \stdClass();
+            $output['data'] = new \stdClass();
+
             http_response_code(400);
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($output);
@@ -83,6 +98,8 @@ class Response {
     }   
 
     public function _partial($view, $args = []) {   
+        $view = ao()->hook('ao_response_partial_start', $view, $args, $this->req, $this);
+
 		$output = '';
 		$dir = ao()->env('AO_APP_DIR') . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'partials' . DIRECTORY_SEPARATOR;
 		$file = $view . '.php';
@@ -103,6 +120,7 @@ class Response {
 
         }   
 
+        $output = ao()->hook('ao_response_partial_finish', $output, $view, $args, $this->req, $this);
 		return $output;
     }
 
@@ -141,28 +159,121 @@ class Response {
     }   
 
     public function status($code) {
-        if($code == 404) {
-            $title = 'Not Available';
-            http_response_code($code);
-            $this->view('alt/404', compact('title'));
+        if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+            if($code == 200) {
+                $output = [];
+                $output['status'] = 'success';
+                $output['messages'] = [];
+
+                http_response_code($code);
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode($output);
+                exit;
+            } else {
+                if($code == 404) {
+                    $message = 'The endpoint does not exist.';
+                } else {
+                    // TODO: Need to escape this code.
+                    $message = 'There was a ' . $code . ' error.';
+                }
+
+                $output = [];
+                $output['status'] = 'error';
+                $output['messages'] = [$message];
+
+                http_response_code($code);
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode($output);
+                exit;
+            }
+        } elseif($this->type == 'api') {
+            if($code == 200) {
+                $output = [];
+                $output['status'] = 'success';
+                $output['messages'] = [];
+                $output['meta'] = new \stdClass();
+                $output['data'] = new \stdClass();
+
+                http_response_code($code);
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode($output);
+                exit;
+            } else {
+                if($code == 404) {
+                    $message = 'The endpoint does not exist.';
+                } else {
+                    // TODO: Need to escape this code.
+                    $message = 'There was a ' . $code . ' error.';
+                }
+
+                $output = [];
+                $output['status'] = 'error';
+                $output['messages'] = [$message];
+                $output['meta'] = new \stdClass();
+                $output['data'] = new \stdClass();
+
+                http_response_code($code);
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode($output);
+                exit;
+            }
         } else {
-            // TODO: Make this exit cleaner like 404 above.
-            // Maybe have a generic error page.
-            // Maybe have prebuilt error views in the mavoc directory.
-            http_response_code($code);
-            echo 'Error code: ' . $code;
-            exit;
+            if($code == 404) {
+                if($this->session->type == 'api') {
+                    http_response_code($code);
+                    $message = 'The endpoint does not exist.';
+
+                    $output = [];
+                    $output['status'] = 'error';
+                    $output['messages'] = [$message];
+                    $output['meta'] = new \stdClass();
+                    $output['data'] = new \stdClass();
+
+                    http_response_code($code);
+                    header('Content-Type: application/json; charset=utf-8');
+                    echo json_encode($output);
+                    exit;
+                } else {
+                    $title = 'Not Available';
+                    http_response_code($code);
+                    $this->view('alt/404', compact('title'));
+                }
+            } else {
+                // TODO: Make this exit cleaner like 404 above.
+                // Maybe have a generic error page.
+                // Maybe have prebuilt error views in the mavoc directory.
+                http_response_code($code);
+                echo 'Error code: ' . $code;
+                exit;
+            }
         }
     }   
 
-    public function success($message, $redirect = null) {
-        $this->flash('success', $message);
-
-        if($redirect !== false) {
-            if($redirect) {
-                $this->redirect($redirect);
+    public function success($message = null, $redirect = null) {
+        if($this->type == 'api') {
+            $output = [];
+            $output['status'] = 'success';
+            if(is_array($message)) {
+                $output['messages'] = $message;
             } else {
-                $this->back();
+                $output['messages'] = [$message];
+            }
+            $output['meta'] = new \stdClass();
+            $output['data'] = new \stdClass();
+
+            http_response_code(200);
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($output);
+            exit;
+        } else {
+            $this->flash('success', $message);
+
+            if($redirect !== false) {
+                if($redirect) {
+                    $this->redirect($redirect);
+                } else {
+                    $this->back();
+                }
             }
         }
     }   

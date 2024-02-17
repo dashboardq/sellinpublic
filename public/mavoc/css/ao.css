@@ -464,6 +464,9 @@ button.close:hover {
     tbody {
         display: block;
     }
+    tbody:empty {
+        content: 'No results'
+    }
     tr {
         display: block;
         margin-bottom: 1rem;

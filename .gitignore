@@ -2,4 +2,6 @@
 .keys.php
 .plug.php
 .Debug.php
+.Local.php
 vendor
+public/local

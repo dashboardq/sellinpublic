@@ -9,7 +9,6 @@
                         <li><a href="/about">About</a></li>
                         <?php if($user): ?>
                         <li><a href="/post">Post</a></li>
-                        <li><a href="/pending">Pending</a></li>
                         <li><a href="/account">Account</a></li>
                         <li><a href="#" onclick="event.preventDefault(); document.getElementById('logout').submit();">Logout</a></li>
                         <?php else: ?>

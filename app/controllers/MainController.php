@@ -4,6 +4,10 @@ namespace app\controllers;
 
 use app\models\Post;
 
+use app\services\APIService;
+
+use mavoc\core\Exception;
+
 class MainController {
     public function about($req, $res) {
         //$res->view('main/home');
@@ -16,14 +20,27 @@ class MainController {
     }
 
     public function home($req, $res) {
+        /*
         $page = clean($req->query['page'] ?? 1, 'int', 1); 
-        $per_page = 10;
+        $per_page = 20;
+         */
 
+        try {
+            $response = APIService::call('/latest', [], $req, $res);
+        } catch(Exception $e) {
+            $req->session->flash['error'] = $e->getMessage();
+            $res->view('alt/error');
+            exit;
+        }
+        $pagination = $response['meta']['pagination'];
+        $posts = $response['data'];
+
+        /*
         $args = [];
         $args['status'] = 'published';
-
         $posts = Post::where($args, [$per_page, $page]);
         $pagination = Post::count($args, [$per_page, $page, 'pagination', $req->path]); 
+         */
 
         return compact('pagination', 'posts');
     }

@@ -75,6 +75,16 @@ return [
     'DB_PASS' => '',
     'DB_CHARSET' => 'utf8mb4',
 
+    // API
+    'API_PREFIX' => 'sip_api_demo_',
+    'API_SUFFIX' => '_key',
+    'API_TYPE' => 'server', // client or server
+    // Below items only needed if remote.
+    'API_BASE' => 'https://example.com', // https://example.com
+    'API_VERSION' => '/api/v0', // /api/v0
+    'API_REMOTE_USERNAME' => 'demo',
+    'API_REMOTE_KEY' => 'sip_api_example_key',
+
     // Email
     'EMAIL_ADMIN' => 'admin@example.com',
     'EMAIL_FROM' => 'Sender Name <sender@example.com>',

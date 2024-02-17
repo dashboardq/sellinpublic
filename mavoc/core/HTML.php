@@ -32,6 +32,27 @@ class HTML {
         echo $output;
     }
 
+    public function _button($name, $class = '', $extra = '') {
+        $output = '';
+        $output .= '<button';
+        $output .= ' class="' . $class . '" ';
+        // Be careful with $extra values - they are not escaped.
+        // Do not use untrusted data.
+        if($extra) {
+            $output .= $extra;
+        }
+        $output .= '>';
+        $output .= _esc($name);
+        $output .= '</button>';
+        $output .= "\n";
+
+        return $output;
+    }
+    public function button($name, $class = '', $extra = '') {
+        $output = $this->_button($name, $class, $extra);
+        echo $output;
+    }
+
     public function _checkbox($label, $name = '', $value = '', $checked = null, $class = '', $extra = '') {
         if(!$name) {
             $name = underscorify($label);
@@ -264,11 +285,21 @@ class HTML {
         if(isset($this->session->flash['error'])) {
             $output .= '<div class="notice error">';
             $output .= "\n";
-            foreach($this->session->flash['error'] as $field => $messages) {
-                foreach($messages as $message) {
-                    $output .= '<p>' . _esc($message) . '</p>';
-                    $output .= "\n";
+            if(is_array($this->session->flash['error'])) {
+                foreach($this->session->flash['error'] as $field => $messages) {
+                    if(is_array($messages)) {
+                        foreach($messages as $message) {
+                            $output .= '<p>' . _esc($message) . '</p>';
+                            $output .= "\n";
+                        }
+                    } else {
+                        $output .= '<p>' . _esc($messages) . '</p>';
+                        $output .= "\n";
+                    }
                 }
+            } else {
+                $output .= '<p>' . _esc($this->session->flash['error']) . '</p>';
+                $output .= "\n";
             }
             $output .= '</div>';
             $output .= "\n";
@@ -276,11 +307,21 @@ class HTML {
         if(isset($this->session->flash['success'])) {
             $output .= '<div class="notice success">';
             $output .= "\n";
-            foreach($this->session->flash['success'] as $field => $messages) {
-                foreach($messages as $message) {
-                    $output .= '<p>' . _esc($message) . '</p>';
-                    $output .= "\n";
+            if(is_array($this->session->flash['success'])) {
+                foreach($this->session->flash['success'] as $field => $messages) {
+                    if(is_array($messages)) {
+                        foreach($messages as $message) {
+                            $output .= '<p>' . _esc($message) . '</p>';
+                            $output .= "\n";
+                        }
+                    } else {
+                        $output .= '<p>' . _esc($messages) . '</p>';
+                        $output .= "\n";
+                    }
                 }
+            } else {
+                $output .= '<p>' . _esc($this->session->flash['success']) . '</p>';
+                $output .= "\n";
             }
             $output .= '</div>';
             $output .= "\n";

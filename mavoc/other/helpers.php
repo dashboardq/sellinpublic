@@ -9,9 +9,24 @@ if(!function_exists('ao')) {
     }
 }
 
+if(!function_exists('bufferHide')) {
+    function bufferHide() {   
+        ob_end_clean();
+    }   
+}
+
+if(!function_exists('bufferStart')) {
+    function bufferStart() {   
+        ob_start();
+    }   
+}
+
 if(!function_exists('classify')) {
     function classify($input) {
-        $words = preg_replace('/[\s,-_]+/', ' ', strtolower($input));
+        $input = ao()->hook('helper_split_input', $input);
+        // Add a space before uppercase letters (make sure the first letter is not uppercase).
+        $words = preg_replace('/(?=[A-Z])/', ' $0', lcfirst($input));
+        $words = preg_replace('/[\s,-_]+/', ' ', strtolower($words));
         $words = ucwords($words);
         $words = ao()->hook('ao_helpers_classify_words', $words);
         $output = str_replace(' ', '', $words);
@@ -39,6 +54,7 @@ if(!function_exists('dangerous')) {
 
 if(!function_exists('dashify')) {
     function dashify($input) {
+        $input = ao()->hook('helper_split_input', $input);
         // Add a space before uppercase letters (make sure the first letter is not uppercase).
         $words = preg_replace('/(?=[A-Z])/', ' $0', lcfirst($input));
         $words = preg_replace('/[\s,-_]+/', ' ', strtolower($words));
@@ -64,7 +80,17 @@ if(!function_exists('data')) {
     }   
 } 
 
+if(!function_exists('dc')) {
+    // Dump and continue
+    function dc($input) {
+        echo '<pre>'; 
+        print_r($input); 
+        echo '</pre>'; 
+    }
+}
+
 if(!function_exists('dd')) {
+    // Dump and die
     function dd($input) {
         echo '<pre>'; 
         print_r($input); 
@@ -72,6 +98,41 @@ if(!function_exists('dd')) {
         die;
     }
 }
+
+if(!function_exists('dj')) {
+    // Dump json and die
+    function dj($input) {
+        if(is_array($input) || $input instanceof \stdClass) {
+            echo json_encode($input);
+            die;
+        } else {
+            $arr = ( array ) $input;
+            $output = [];
+            // Need to add more types and loop through the children (without hitting infinite recursion like print_r)
+            // Maybe consider print_r to json code:
+            // https://stackoverflow.com/questions/43522927/convert-print-r-array-of-objects-string-to-json-in-php
+            foreach($arr as $key => $value ) {
+                if(
+                    is_string($value)
+                    || is_numeric($value)
+                ) {
+                    $output[$key] = $value;
+                }
+            }
+            echo json_encode($output);
+            die;
+
+            // Need to look at adding a way to turn a class instance (like Request and Response) to JSON.
+            // Consider using "implements JsonSerializable": 
+            // https://www.php.net/manual/en/jsonserializable.jsonserialize.php
+            // Or something like the example here (the AbstractEntity class):
+            // https://stackoverflow.com/questions/9858448/converting-object-to-json-and-json-to-object-in-php-library-like-gson-for-java
+            echo 'The object cannot be converted to JSON.';
+            die;
+        }
+    }
+}
+
 
 if(!function_exists('debugSql')) {
     // PDO sends the query and parameters separately to the database.
@@ -230,7 +291,10 @@ if(!function_exists('meta')) {
 
 if(!function_exists('methodify')) {
     function methodify($input) {
-        $words = preg_replace('/[\s,-_]+/', ' ', strtolower($input));
+        $input = ao()->hook('helper_split_input', $input);
+        // Add a space before uppercase letters (make sure the first letter is not uppercase).
+        $words = preg_replace('/(?=[A-Z])/', ' $0', lcfirst($input));
+        $words = preg_replace('/[\s,-_]+/', ' ', strtolower($words));
         $words = ucwords($words);
         $parts = explode(' ', $words);
         if(count($parts)) {
@@ -326,9 +390,27 @@ if(!function_exists('simplify')) {
     }
 }
 
+if(!function_exists('success')) {
+    function success($message = []) {   
+        $output = [];
+        $output['status'] = 'success';
+        if(is_array($message)) {
+            $output['messages'] = $message;
+        } else {
+            $output['messages'] = [$message];
+        }
+        $output['meta'] = new \stdClass();
+        $output['data'] = new \stdClass();
+        return $output;
+    }   
+} 
+
 if(!function_exists('underscorify')) {
     function underscorify($input) {
-        $words = preg_replace('/[\s,_-]+/', ' ', strtolower($input));
+        $input = ao()->hook('helper_split_input', $input);
+        // Add a space before uppercase letters (make sure the first letter is not uppercase).
+        $words = preg_replace('/(?=[A-Z])/', ' $0', lcfirst($input));
+        $words = preg_replace('/[\s,-_]+/', ' ', strtolower($words));
         $parts = explode(' ', $words);
         if(count($parts)) {
             $parts[0] = strtolower($parts[0]);
@@ -338,9 +420,12 @@ if(!function_exists('underscorify')) {
     }
 }
 
-if(!function_exists('upperfy')) {
-    function upperfy($input) {
-        $output = preg_replace('/[\s,_-]+/', '_', strtoupper($input));
+if(!function_exists('upperify')) {
+    function upperify($input) {
+        $input = ao()->hook('helper_split_input', $input);
+        // Add a space before uppercase letters (make sure the first letter is not uppercase).
+        $words = preg_replace('/(?=[A-Z])/', ' $0', lcfirst($input));
+        $output = preg_replace('/[\s,-_]+/', '_', strtoupper($words));
         return $output;
     }   
 }
@@ -380,7 +465,10 @@ if(!function_exists('url')) {
 
 if(!function_exists('wordify')) {
     function wordify($input) {
-        $words = preg_replace('/[\s,-_]+/', ' ', strtolower($input));
+        $input = ao()->hook('helper_split_input', $input);
+        // Add a space before uppercase letters (make sure the first letter is not uppercase).
+        $words = preg_replace('/(?=[A-Z])/', ' $0', lcfirst($input));
+        $words = preg_replace('/[\s,-_]+/', ' ', strtolower($words));
 
         // Uppercase any abbreviations
         // Acronyms won't have any vowels (some may but this is just a rough working example for now) 

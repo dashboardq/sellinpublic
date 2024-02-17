@@ -2,6 +2,7 @@
 
 namespace mavoc\core;
 
+use app\models\APIKey;
 use app\models\User;
 
 class Session {
@@ -9,6 +10,7 @@ class Session {
     public $flash;
     public $next_flash;
     public $flash_types = ['fields'];
+    public $type = 'web';
     public $user;
     public $user_id = 0;
     public $id;
@@ -22,41 +24,53 @@ class Session {
         session_start();
         $this->id = session_id();
 
-        if(isset($_SESSION['flash'])) {
-            $this->flash = $_SESSION['flash'];
-        } else {
+        // API call is being made.
+        if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+            $this->type = 'api';
+
+            $api_username = $_SERVER['PHP_AUTH_USER'];
+            $api_username = ao()->hook('ao_session_api_username', $api_username);
+
+            $api_password = $_SERVER['PHP_AUTH_PW'];
+            $api_password = ao()->hook('ao_session_api_password', $api_password);
+
+            $user = APIKey::validate($api_username, $api_password);
+
+            $this->user = $user;
+            $this->user_id = $user->id;
             $this->flash = [];
-        }
-
-        if(ao()->env('APP_LOGIN_TYPE') == 'list') {
-            $users = ao()->env('APP_LOGIN_USERS');
-            if(isset($_SESSION['user_id'])) {
-                $this->user = User::local($_SESSION['user_id']);
-                if($this->user) {
-                    $this->user_id = $_SESSION['user_id'];
-                } else {
-                    $this->user_id = 0;
-                }
-            } else {
-                $this->user_id = 0;
-            }
-        } elseif(ao()->env('APP_LOGIN_TYPE') == 'db') { 
-            if(isset($_SESSION['user_id'])) {
-                $this->user = User::find($_SESSION['user_id']);
-                if($this->user) {
-                    $this->user_id = $_SESSION['user_id'];
-                } else {
-                    $this->user_id = 0;
-                }
-            } else {
-                $this->user_id = 0;
-            }
-        }
-
-        if(isset($_SESSION['data'])) {
-            $this->data = $_SESSION['data'];
-        } else {
             $this->data = [];
+
+            ao()->hook('ao_session_api_passed', $user->id);
+        } else {
+            if(isset($_SESSION['flash'])) {
+                $this->flash = $_SESSION['flash'];
+            } else {
+                $this->flash = [];
+            }
+
+            if(in_array(ao()->env('APP_LOGIN_TYPE'), ['db', 'list'])) {
+                if(isset($_SESSION['user_id'])) {
+                    if(ao()->env('APP_LOGIN_TYPE') == 'db') { 
+                        $this->user = User::find($_SESSION['user_id']);
+                    } elseif(ao()->env('APP_LOGIN_TYPE') == 'db') { 
+                        $this->user = User::local($_SESSION['user_id']);
+                    }
+                    if($this->user) {
+                        $this->user_id = $_SESSION['user_id'];
+                    } else {
+                        $this->user_id = 0;
+                    }
+                } else {
+                    $this->user_id = 0;
+                }
+            }
+
+            if(isset($_SESSION['data'])) {
+                $this->data = $_SESSION['data'];
+            } else {
+                $this->data = [];
+            }
         }
     }
 
@@ -89,13 +103,7 @@ class Session {
                     $this->next_flash[$type][$field] = [];
                 }
 
-                if(is_array($message)) {
-                    foreach($value as $msg) {
-                        $this->next_flash[$type][$field][] = $msg;
-                    }
-                } else {
-                    $this->next_flash[$type][$field][] = $value;
-                }
+                $this->next_flash[$type][$field][] = $value;
             }
 
         }

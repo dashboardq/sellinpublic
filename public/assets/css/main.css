@@ -56,3 +56,51 @@ main .pagination {
     float: right;
     text-decoration: underline;
 }
+
+/* BOF: Page Specific Styles */
+.page_api-key_add table td {
+    overflow-wrap: break-word;
+}
+/* EOF: Page Specific Styles */
+
+
+/* BOF: Columns */
+.sidebars {
+    margin-top: 32px;
+}
+.sidebars menu li {
+    display: block;
+    margin: 1rem;
+    font-size: 18px;
+}
+/* EOF: Columns */
+
+/* BOF: Two Columns */
+#app.columns_2 {
+    display: grid;
+    grid-template-columns: auto 280px 600px 320px auto;
+}
+#app.columns_2 > header {
+    grid-column: 1 / 6;
+}
+#app.columns_2 > #sidebar_left {
+    grid-column: 2 / 3;
+}
+#app.columns_2 > main {
+    grid-column: 3 / 5;
+}
+#app.columns_2 > footer {
+    grid-column: 1 / 6;
+}
+/* EOF: Two Columns */
+
+@media (max-width: 1199px) {
+    #app.columns_2 {
+        display: block;
+    }
+    #app.columns_2 > #sidebar_left {
+        margin: 0 auto;
+        max-width: 900px;
+    }
+
+}
