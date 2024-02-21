@@ -35,6 +35,11 @@ class APISettingsController {
 
         Setting::set($req->user_id, $data);
 
-        $res->success();
+        $settings = Setting::get($req->user_id);
+
+        $output = [];
+        $output['timezone'] = $settings['timezone'];
+
+        return APIService::data($output);
     }
 }

@@ -42,7 +42,7 @@ class App {
 
     public function cacheDate($vars, $view, $req, $res) {
         if($view == 'head' || $view == 'foot') {
-            $vars['cache_date'] = '2024-02-15';
+            $vars['cache_date'] = '2024-02-20';
         }
 
         return $vars;

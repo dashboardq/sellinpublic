@@ -18,7 +18,8 @@ class APIAccountsController {
         }
 
         $output = [];
-        $output['username'] = $usernames[0]->data['name'];
+        $output['user_id'] = $usernames[0]->data['user_id'];
+        $output['username'] = $usernames[0]->data['account']['name'];
         $output['display_name'] = $req->user->data['account']['display_name'];
         $output['bio'] = $req->user->data['account']['bio'];
 
@@ -66,6 +67,12 @@ class APIAccountsController {
             $account->update($data);
         }
 
-        return success();
+        $output = [];
+        $output['user_id'] = $req->user_id;
+        $output['username'] = $req->user->data['account']['username']['name'];
+        $output['display_name'] = $req->user->data['account']['display_name'];
+        $output['bio'] = $req->user->data['account']['bio'];
+
+        return APIService::data($output);
     }
 }

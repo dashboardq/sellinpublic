@@ -154,6 +154,9 @@ class User extends Model {
         $account = Account::by('user_id', $data['id']);
         $data['account'] = $account->data;
 
+        $restriction = Restriction::by('user_id', $data['id']);
+        $data['premium_level'] = $restriction->data['premium_level'];
+
         return $data;
     }
 

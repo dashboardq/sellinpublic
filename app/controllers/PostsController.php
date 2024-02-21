@@ -73,4 +73,8 @@ class PostsController {
 
         return compact('pagination', 'posts');
     }
+
+    public function post($req, $res) {
+        return [];
+    }
 }

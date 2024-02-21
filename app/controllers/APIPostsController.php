@@ -68,6 +68,23 @@ class APIPostsController {
 
         $post = Post::create($val);
 
-        return success('Thank you for submitting your post. It will be publicly displayed in ' . $delay . '. New accounts have a delay in publishing to help protect against spam.');
+        $data = [];
+        $data['id'] = $post->id;
+        $data['user_id'] = $req->user_id;
+        $data['post'] = $post->data['post'];
+        $data['status'] = $post->data['status'];
+        $data['created_at'] = $post->data['created_at']->format('c');
+        $data['updated_at'] = $post->data['updated_at']->format('c');
+        $data['published_at'] = $post->data['published_at']->format('c');
+        $data['username'] = $req->user->data['account']['username']['name'];
+        $data['display_name'] = $req->user->data['account']['display_name'];
+        $data['bio'] = $req->user->data['account']['bio'];
+
+        $output = [];
+        $output['status'] = 'success';
+        $output['messages'] = ['Thank you for submitting your post. It will be publicly displayed in ' . $delay . '. New accounts have a delay in publishing to help protect against spam.'];
+        $output['meta'] = new \stdClass();
+        $output['data'] = $data;
+        return $output;
     }
 }

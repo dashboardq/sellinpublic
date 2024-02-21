@@ -9,6 +9,32 @@ Route::get('about', ['MainController', 'about']);
 Route::get('terms', ['MainController', 'terms']);
 Route::get('privacy', ['MainController', 'privacy']);
 
+Route::get('documentation', ['DocumentationController', 'introduction']);
+Route::get('documentation/authentication', ['DocumentationController', 'authentication']);
+Route::get('documentation/request', ['DocumentationController', 'request']);
+Route::get('documentation/response', ['DocumentationController', 'response']);
+Route::get('documentation/sandbox', ['DocumentationController', 'sandbox']);
+Route::get('documentation/client', ['DocumentationController', 'client']);
+Route::get('documentation/cli', ['DocumentationController', 'cli']);
+Route::get('documentation/changelog', ['DocumentationController', 'changelog']);
+Route::get('documentation/endpoints', ['DocumentationController', 'endpoints']);
+Route::get('documentation/endpoint/account', ['DocumentationController', 'account']);
+Route::get('documentation/endpoint/account/get', ['DocumentationController', 'accountGet']);
+Route::get('documentation/endpoint/account/update', ['DocumentationController', 'accountUpdate']);
+Route::get('documentation/endpoint/metrics', ['DocumentationController', 'metrics']);
+Route::get('documentation/endpoint/metrics/published', ['DocumentationController', 'metricsPublished']);
+Route::get('documentation/endpoint/metrics/pending', ['DocumentationController', 'metricsPending']);
+Route::get('documentation/endpoint/metrics/usernames', ['DocumentationController', 'metricsUsernames']);
+Route::get('documentation/endpoint/miscellaneous', ['DocumentationController', 'miscellaneous']);
+Route::get('documentation/endpoint/posts', ['DocumentationController', 'posts']);
+Route::get('documentation/endpoint/posts/latest', ['DocumentationController', 'postsLatest']);
+Route::get('documentation/endpoint/posts/pending', ['DocumentationController', 'postsPending']);
+Route::get('documentation/endpoint/posts/create', ['DocumentationController', 'postsCreate']);
+Route::get('documentation/endpoint/settings', ['DocumentationController', 'settings']);
+Route::get('documentation/endpoint/settings/get', ['DocumentationController', 'settingsGet']);
+Route::get('documentation/endpoint/settings/timezones', ['DocumentationController', 'settingsTimezones']);
+Route::get('documentation/endpoint/settings/update', ['DocumentationController', 'settingsUpdate']);
+
 
 // Private
 Route::get('account', ['AccountsController', 'account'], 'private');
@@ -49,3 +75,5 @@ Route::get('reset-password', ['AuthController', 'resetPassword'], 'public');
 Route::post('reset-password', ['AuthController', 'resetPasswordPost'], 'public');
 
 
+Route::get('{username}/{post_id}', ['PostsController', 'post']);
+Route::get('{username}', ['ProfilesController', 'profile']); 

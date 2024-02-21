@@ -468,6 +468,7 @@ class ReservedService {
             'signin',
             'signout',
             'signup',
+            'sip',
             'site',
             'sitemap',
             'sites',

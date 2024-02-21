@@ -2,15 +2,20 @@
 
 use mavoc\core\Route;
 
-Route::get('api/metric/posts', ['APIMetricsController', 'posts']);
-Route::get('api/metric/pendings', ['APIMetricsController', 'pendings']);
-Route::get('api/metric/usernames', ['APIMetricsController', 'usernames']);
+Route::get('api/metric/posts', ['APIMetricsController', 'originalPosts']);
+Route::get('api/metric/pendings', ['APIMetricsController', 'originalPendings']);
+Route::get('api/metric/usernames', ['APIMetricsController', 'originalUsernames']);
 
 
 
 // Public
+Route::get('api/v0/hello', ['APIMiscController', 'hello']);
+Route::post('api/v0/hello', ['APIMiscController', 'helloPost']);
 Route::get('api/v0/latest', ['APIPostsController', 'latest']);
 
+Route::get('api/v0/metric/posts', ['APIMetricsController', 'posts']);
+Route::get('api/v0/metric/pendings', ['APIMetricsController', 'pendings']);
+Route::get('api/v0/metric/usernames', ['APIMetricsController', 'usernames']);
 
 // Private
 Route::get('api/v0/account', ['APIAccountsController', 'account'], 'private');

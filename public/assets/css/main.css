@@ -66,6 +66,7 @@ main .pagination {
 
 /* BOF: Columns */
 .sidebars {
+    position: relative;
     margin-top: 32px;
 }
 .sidebars menu li {
@@ -93,6 +94,31 @@ main .pagination {
     grid-column: 1 / 6;
 }
 /* EOF: Two Columns */
+
+
+
+/* BOF: Documentation */
+.page_documentation main .page {
+    margin-bottom: 48px;
+    min-height: 564px; 
+}
+
+.code {
+    /*
+    position: sticky;          
+    */
+    top: 1rem;                    
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+} 
+.code code,
+.code pre {
+    display: block;            
+    padding: 1rem;
+    overflow-wrap: break-word; 
+    white-space: pre-wrap;
+}
+/* EOF: Documentation */
 
 @media (max-width: 1199px) {
     #app.columns_2 {

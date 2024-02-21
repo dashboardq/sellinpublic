@@ -58,6 +58,7 @@ img {
 .page {
     position: relative;
     padding: 1rem;
+    padding: 1.5rem 2rem;
     max-width: 900px;
     margin: 0 auto;
 }
@@ -103,7 +104,8 @@ fieldset {
     border: 0;
 }
 
-code {
+code,
+pre {
     background: #efefef;
     padding: 1px;
     border: 1px solid #dedede;
@@ -184,6 +186,11 @@ hr {
 }
 #app > footer > .box > * {
     width: 50%;
+}
+
+#app > footer menu {
+    display: flex;
+    justify-content: end;
 }
 
 #app > footer ul {
@@ -417,10 +424,21 @@ button.close:hover {
     }
 }
 
+.desktop {
+    display: block;
+}
+.mobile {
+    display: none;
+}
+
 @media (max-width: 1199px) {
     #app > header  > .box, 
     #app > footer > .box {
         width: auto;
+    }
+
+    #app > footer menu {
+        display: block;
     }
 
     /* BOF Navigation */
@@ -498,4 +516,11 @@ button.close:hover {
     }
 
 	/* EOF Make Table Vertical */
+
+    .desktop {
+        display: none;
+    }
+    .mobile {
+        display: block;
+    }
 }
