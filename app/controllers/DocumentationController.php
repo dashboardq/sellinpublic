@@ -88,6 +88,10 @@ class DocumentationController {
         return [];
     }
 
+    public function profile($req, $res) {
+        return [];
+    }
+
     public function settings($req, $res) {
         return [];
     }

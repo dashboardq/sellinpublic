@@ -57,6 +57,7 @@ return [
     'AO_BASE_DIR' => __DIR__,
     'AO_DB_DIR' => __DIR__ . DIRECTORY_SEPARATOR . 'db',
     'AO_PLUGIN_DIR' => __DIR__ . DIRECTORY_SEPARATOR . 'plugins',
+    'AO_PUBLIC_DIR' => __DIR__ . DIRECTORY_SEPARATOR . 'public',
     'AO_SETTINGS_DIR' => __DIR__ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'settings',
     'AO_STORAGE_DIR' => __DIR__ . DIRECTORY_SEPARATOR . 'storage',
     'AO_MAVOC_DIR' => __DIR__ . DIRECTORY_SEPARATOR . 'mavoc',
@@ -79,7 +80,7 @@ return [
     'API_PREFIX' => 'sip_api_demo_',
     'API_SUFFIX' => '_key',
     'API_TYPE' => 'server', // client or server
-    // Below items only needed if remote.
+    // Below items only needed if client.
     'API_BASE' => 'https://example.com', // https://example.com
     'API_VERSION' => '/api/v0', // /api/v0
     'API_REMOTE_USERNAME' => 'demo',

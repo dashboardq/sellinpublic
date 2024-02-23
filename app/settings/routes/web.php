@@ -6,6 +6,7 @@ use mavoc\core\Route;
 Route::get('/', ['MainController', 'home']);
 //Route::get('latest', ['MainController', 'home']);
 Route::get('about', ['MainController', 'about']);
+Route::get('pricing', ['MainController', 'pricing']);
 Route::get('terms', ['MainController', 'terms']);
 Route::get('privacy', ['MainController', 'privacy']);
 
@@ -30,6 +31,7 @@ Route::get('documentation/endpoint/posts', ['DocumentationController', 'posts'])
 Route::get('documentation/endpoint/posts/latest', ['DocumentationController', 'postsLatest']);
 Route::get('documentation/endpoint/posts/pending', ['DocumentationController', 'postsPending']);
 Route::get('documentation/endpoint/posts/create', ['DocumentationController', 'postsCreate']);
+Route::get('documentation/endpoint/profile', ['DocumentationController', 'profile']);
 Route::get('documentation/endpoint/settings', ['DocumentationController', 'settings']);
 Route::get('documentation/endpoint/settings/get', ['DocumentationController', 'settingsGet']);
 Route::get('documentation/endpoint/settings/timezones', ['DocumentationController', 'settingsTimezones']);

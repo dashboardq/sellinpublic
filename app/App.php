@@ -34,7 +34,7 @@ class App {
         if($req->type == 'api') {
             $restriction = Restriction::get($user_id);
             if($restriction['premium_level'] == 0) {
-                throw new Exception('In order to access a private endpoint you need to have premium subscription access.', '', 401, 'json');
+                throw new Exception('In order to access a private endpoint you need to have a pro account. Please upgrade to a pro account to access this endpoint.', '', 401, 'json');
             }
         }
         return $user_id;
@@ -42,7 +42,7 @@ class App {
 
     public function cacheDate($vars, $view, $req, $res) {
         if($view == 'head' || $view == 'foot') {
-            $vars['cache_date'] = '2024-02-20';
+            $vars['cache_date'] = '2024-02-22';
         }
 
         return $vars;

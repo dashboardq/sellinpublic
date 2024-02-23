@@ -8,54 +8,40 @@
         <div id="app">
             <?php $res->partial('header'); ?>
             <main>
-                <div class="box">
+                <div class="page">
                     <h1>Pricing</h1>
-                    <ul>
+                    <ul class="columns">
                         <li>
                             <h2>Free</h2>
-                            <h3>$0</h3>
-                            <ul>
-                                <li>Benefit <strong>1 listed</strong> here</li>
-                            </ul>
+                            <h3>$0 / month</h3>
                             <a href="/login" class="button">Get Started</a>
+                            <ul>
+                                <li>Public API access</li>
+                                <li>10 private message credits</li>
+                            </ul>
                         </li>
                         <li class="card -highlight">
-                            <h2>Basic</h2>
-                            <h3>$12/mo</h3>
-                            <ul>
-                                <li>Benefit <strong>1 listed</strong> here</li>
-                                <li>Benefit <strong>2 listed</strong> here</li>
-                            </ul>
+                            <h2>Pro</h2>
+                            <h3>$8 / month</h3>
                             <a href="/login" class="button">Get Started</a>
-                        </li>
-                        <li class="card">
-                            <h2>Intermediate</h2>
-                            <h3>$48/mo</h3>
                             <ul>
-                                <li>Benefit <strong>1 listed</strong> here</li>
-                                <li>Benefit <strong>2 listed</strong> here</li>
-                                <li>Benefit <strong>3 listed</strong> here</li>
+                                <li>Public &amp; Private API access</li>
+                                <li>100 private message credits</li>
+                                <li>Optional domain username</li>
+                                <li>Early access to upcoming beta features and access to pro features</li>
+<?php /*
+                                <li>Enhanced profile options</li>
+                                <li>Ability to post in restricted marketplace subdirectories</li>
+ */ ?>
                             </ul>
-                            <a href="/login" class="button">Get Started</a>
-                        </li>
-                        <li class="card">
-                            <h2>Advanced</h2>
-                            <h3>$98/mo</h3>
-                            <ul>
-                                <li>Benefit <strong>1 listed</strong> here</li>
-                                <li>Benefit <strong>2 listed</strong> here</li>
-                                <li>Benefit <strong>3 listed</strong> here</li>
-                                <li>Benefit <strong>4 listed</strong> here</li>
-                            </ul>
-                            <a href="/login" class="button">Get Started</a>
                         </li>
                         <li class="card">
                             <h2>Custom</h2>
                             <h3>Get In Touch</h3>
+                            <a href="/login" class="button">Get Started</a>
                             <ul>
                                 <li>If you are not seeing a plan that meets your needs, please feel free to reach out.</li>
                             </ul>
-                            <a href="/login" class="button">Get Started</a>
                         </li>
                     </ul>
                 </div>

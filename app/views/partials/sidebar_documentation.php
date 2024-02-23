@@ -16,6 +16,7 @@
                             <li><a href="/documentation/endpoint/metrics">Metrics</a></li>
                             <li><a href="/documentation/endpoint/miscellaneous">Miscellaneous</a></li>
                             <li><a href="/documentation/endpoint/posts">Posts</a></li>
+                            <li><a href="/documentation/endpoint/profile">Profile</a></li>
                             <li><a href="/documentation/endpoint/settings">Settings</a></li>
                         </menu>
                     </li>
@@ -36,6 +37,7 @@
                             <li><a href="/documentation/endpoint/metrics#content">Metrics</a></li>
                             <li><a href="/documentation/endpoint/miscellaneous#content">Miscellaneous</a></li>
                             <li><a href="/documentation/endpoint/posts#content">Posts</a></li>
+                            <li><a href="/documentation/endpoint/profile#content">Profile</a></li>
                             <li><a href="/documentation/endpoint/settings#content">Settings</a></li>
                         </menu>
                     </li>

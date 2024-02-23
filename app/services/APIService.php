@@ -58,6 +58,17 @@ class APIService {
              */
 
         } else {
+            $parts = explode('/', trim($endpoint, '/'));
+            if(count($parts) > 2) {
+                $first_slug = '/' . $parts[0];
+                $second_slug = '/' . $parts[1];
+            } elseif(count($parts) > 1) {
+                $first_slug = '/' . $parts[0];
+                $second_slug = '';
+            } else {
+                $first_slug = $endpoint;
+                $second_slug = '';
+            }
             if($endpoint == '/account') {
                 $controller = new APIAccountsController();
                 if(count($data)) {
@@ -92,6 +103,20 @@ class APIService {
                 } else {
                     //$response = $controller->read($req, $res);
                 }
+            } elseif($first_slug == '/profile') {
+                $controller = new APIAccountsController();
+                $response = $controller->profile($req, $res);
+            } elseif($first_slug . $second_slug == '/post/children') {
+                $controller = new APIPostsController();
+                $response = $controller->children($req, $res);
+            } elseif($first_slug . $second_slug == '/post/single') {
+                $controller = new APIPostsController();
+                $response = $controller->single($req, $res);
+            } elseif($first_slug . $second_slug == '/timeline/user') {
+                $controller = new APIPostsController();
+                $response = $controller->timelineUser($req, $res);
+            } else {
+                $response = self::error('The requested URL does not appear to be valid.');
             }
         }
 
@@ -149,7 +174,7 @@ class APIService {
         return $response;
     }
 
-    public static function clean($posts) {
+    public static function cleanPosts($posts) {
         foreach($posts as $i => $post) {
             $posts[$i]->data['display_name'] = $post->data['user']['account']['display_name'];
             $posts[$i]->data['username'] = $post->data['user']['account']['username']['name'];
@@ -175,6 +200,33 @@ class APIService {
             $output['meta'] = $meta;
         }
         $output['data'] = $input;
+        return $output;
+    }
+
+    public static function error($messages, $meta = [], $data = []) {
+        $output = [];
+        $output['status'] = 'error';
+        if(is_array($messages)) {
+            $output['messages'] = $messages;
+        } else {
+            $output['messages'] = [$messages];
+        }
+        if(
+            is_array($meta) && count($meta) == 0
+            || !$meta
+        ) {
+            $output['meta'] = new \stdClass();
+        } else {
+            $output['meta'] = $meta;
+        }
+        if(
+            is_array($meta) && count($meta) == 0
+            || !$meta
+        ) {
+            $output['data'] = new \stdClass();
+        } else {
+            $output['data'] = $meta;
+        }
         return $output;
     }
 }

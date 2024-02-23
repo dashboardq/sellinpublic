@@ -8,16 +8,12 @@
         <div id="app">
             <?php $res->partial('header'); ?>
             <main>
+                <?php if(count($posts) == 0): ?>
                 <div class="page">
-                    <h1>Latest</h1>
-                    <?php $res->partial('view_notice_before'); ?>
-                    <div class="notice">
-                        <p>Sell In Public was just built the weekend of February 2-4, 2024 and is currently in a very early alpha state. There are many changes and updates still to come.</p>
-                    </div>
-                    <?php $res->partial('view_notice_after'); ?>
-
-                    <?php $res->html->messages(); ?>
+                    <p>No results.</p>
                 </div>
+                <?php endif; ?>
+
 
                 <?php foreach($posts as $post): ?>
                 <div class="post">

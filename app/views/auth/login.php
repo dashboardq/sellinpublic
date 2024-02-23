@@ -8,7 +8,7 @@
         <div id="app">
             <?php $res->partial('header'); ?>
             <main>
-                <section class="box">
+                <section class="page">
                     <section class="full">
                         <?php $res->html->messages(); ?>
                     </section>

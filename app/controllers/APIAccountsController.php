@@ -14,14 +14,35 @@ class APIAccountsController {
 
         // First time logging in, make sure they have a username
         if(count($usernames) == 0) {    
-            $res->redirect('/username/add');
+            return APIService::error('The user info requested does not appear to be valid.');
         }
 
         $output = [];
         $output['user_id'] = $usernames[0]->data['user_id'];
-        $output['username'] = $usernames[0]->data['account']['name'];
+        $output['username'] = $usernames[0]->data['name'];
         $output['display_name'] = $req->user->data['account']['display_name'];
         $output['bio'] = $req->user->data['account']['bio'];
+
+        return APIService::data($output);
+    }
+
+    public function profile($req, $res) {
+        $username = Username::by('name', $req->params['username']);
+
+        if(!$username) {    
+            return APIService::error('The user info requested does not appear to be valid.');
+        }
+
+        $user = User::find($username->data['user_id']);
+        if(!$username) {    
+            return APIService::error('The user info requested does not appear to be valid.');
+        }
+
+        $output = [];
+        $output['user_id'] = $username->data['user_id'];
+        $output['username'] = $username->data['name'];
+        $output['display_name'] = $user->data['account']['display_name'];
+        $output['bio'] = $user->data['account']['bio'];
 
         return APIService::data($output);
     }

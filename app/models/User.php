@@ -155,7 +155,11 @@ class User extends Model {
         $data['account'] = $account->data;
 
         $restriction = Restriction::by('user_id', $data['id']);
-        $data['premium_level'] = $restriction->data['premium_level'];
+        if($restriction) {
+            $data['premium_level'] = $restriction->data['premium_level'];
+        } else {
+            $data['premium_level'] = 100;
+        }
 
         return $data;
     }

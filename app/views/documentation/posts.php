@@ -164,6 +164,180 @@
   }
 }</pre>
                     </div>
+
+					<hr>
+					<h3>GET /post/children/{post_id}</h3>
+					<p>Provides a post and its children. The meta information will provide pagination info.</p>
+                    <h4>URL params</h4>
+                    <p><strong>post_id</strong>: integer<br>
+                    The id of the post.</p>
+                    <div class="code">
+                        <code>curl https://sandbox.sellinpublic.com/api/v0/post/children/1 -u "demo:sip_api_sand_01234demo56789_key"</code>
+                    </div>
+
+                    <p>Below is the expected result from that cURL call:</p>
+                    <div class="code">
+                        <pre>
+{
+  "status": "success",
+  "messages": [],
+  "meta": {
+    "pagination": {
+      "total_results": 1,
+      "total_pages": 1,
+      "page_previous": 1,
+      "page_next": 1,
+      "page_current": 1,
+      "current_page": 1,
+      "current_result": 1,
+      "current_result_first": 1,
+      "current_result_last": 1,
+      "url_next": "/api/v0/post/children/1?page=1",
+      "url_previous": "/api/v0/post/children/1?page=1"
+    }
+  },
+  "data": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "post": "Welcome to the Sandbox server where you can test the interface and API interactions!",
+      "content": "",
+      "status": "published",
+      "created_at": "2024-02-09T01:50:12+00:00",
+      "updated_at": "2024-02-09T02:09:26+00:00",
+      "published_at": "2024-02-09T01:50:12+00:00",
+      "username": "sandbox",
+      "display_name": "Sandbox",
+      "bio": null
+    }
+  ]
+}</pre>
+                    </div>
+
+					<hr>
+					<h3>GET /post/single/{post_id}</h3>
+					<p>Provides the contents of a post.</p>
+                    <h4>URL params</h4>
+                    <p><strong>post_id</strong>: integer<br>
+                    The id of the post.</p>
+                    <div class="code">
+                        <code>curl https://sandbox.sellinpublic.com/api/v0/post/single/1 -u "demo:sip_api_sand_01234demo56789_key"</code>
+                    </div>
+
+                    <p>Below is the expected result from that cURL call:</p>
+                    <div class="code">
+                        <pre>
+{
+  "status": "success",
+  "messages": [],
+  "meta": {
+    "pagination": {
+      "total_results": 1,
+      "total_pages": 1,
+      "page_previous": 1,
+      "page_next": 1,
+      "page_current": 1,
+      "current_page": 1,
+      "current_result": 1,
+      "current_result_first": 1,
+      "current_result_last": 1,
+      "url_next": "/api/v0/post/single/1?page=1",
+      "url_previous": "/api/v0/post/single/1?page=1"
+    }
+  },
+  "data": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "post": "Welcome to the Sandbox server where you can test the interface and API interactions!",
+      "content": "",
+      "status": "published",
+      "created_at": "2024-02-09T01:50:12+00:00",
+      "updated_at": "2024-02-09T02:09:26+00:00",
+      "published_at": "2024-02-09T01:50:12+00:00",
+      "username": "sandbox",
+      "display_name": "Sandbox",
+      "bio": null
+    }
+  ]
+}</pre>
+                    </div>
+
+					<hr>
+					<h3>GET /timeline/user/{username}</h3>
+					<p>Provides the user posts. The meta information will provide pagination info.</p>
+                    <h4>URL params</h4>
+                    <p><strong>username</strong>: string<br>
+                    The username for the account.</p>
+                    <div class="code">
+                        <code>curl https://sandbox.sellinpublic.com/api/v0/timeline/user/sandbox -u "demo:sip_api_sand_01234demo56789_key"</code>
+                    </div>
+
+                    <p>Below is the expected result from that cURL call:</p>
+                    <div class="code">
+                        <pre>
+{                                                                                                                                                    
+  "status": "success",                                                                                                                               
+  "messages": [],                                                         
+  "meta": {                                                               
+    "pagination": {                                                                                                                                  
+      "total_results": 3,   
+      "total_pages": 1,         
+      "page_previous": 1,                                                 
+      "page_next": 1,                                                     
+      "page_current": 1,                                                  
+      "current_page": 1,    
+      "current_result": 1,      
+      "current_result_first": 1,                                                                                                                     
+      "current_result_last": 3,
+      "url_next": "/api/v0/timeline/user/sandbox?page=1",
+      "url_previous": "/api/v0/timeline/user/sandbox?page=1"                             
+    }                                                                     
+  },                                                                                                                                                 
+  "data": [                 
+    {                           
+      "id": 3,                                                            
+      "user_id": 1,                                                       
+      "post": "The sandbox server will be automatically reset at specific intervals (initially thinking every 24 hours).",
+      "content": "",        
+      "status": "published",                                              
+      "created_at": "2024-02-09T01:52:58+00:00",
+      "updated_at": "2024-02-09T02:09:26+00:00",
+      "published_at": "2024-02-09T01:52:58+00:00",
+      "username": "sandbox",
+      "display_name": "Sandbox",
+      "bio": null
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "post": "The sandbox server has just been created. It will be providing fake user login and API testing options in the future.",
+      "content": "",
+      "status": "published",
+      "created_at": "2024-02-09T01:51:55+00:00",
+      "updated_at": "2024-02-09T02:09:26+00:00",
+      "published_at": "2024-02-09T01:51:55+00:00",
+      "username": "sandbox",
+      "display_name": "Sandbox",
+      "bio": null
+    },
+    {
+      "id": 1,
+      "user_id": 1,
+      "post": "Welcome to the Sandbox server where you can test the interface and API interactions!",
+      "content": "",
+      "status": "published",
+      "created_at": "2024-02-09T01:50:12+00:00",
+      "updated_at": "2024-02-09T02:09:26+00:00",
+      "published_at": "2024-02-09T01:50:12+00:00",
+      "username": "sandbox",
+      "display_name": "Sandbox",
+      "bio": null
+    }
+  ]
+}</pre>
+                    </div>
+
                 </div>
             </main>
             <?php $res->partial('footer'); ?>

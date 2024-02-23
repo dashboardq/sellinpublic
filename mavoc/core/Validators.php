@@ -175,10 +175,18 @@ class Validators {
         $current_field = $args[3] ?? '';
         $current_value = $args[4] ?? '';
 
+        $filter_field = $args[5] ?? '';
+        $filter_value = $args[6] ?? '';
+
         $value = $input[$field];
 
         // UNSAFE: Be careful
-        if($current_field && $current_value) {
+        // When current_field and current_value is passed in, it ignores the passed in value and item which should be the current item (meaning it will not throw an error because the item exists).
+        if($filter_field && $filter_value && $current_field && $current_value) {
+            $results = ao()->db->query('SELECT * FROM ' . $table . ' WHERE ' . $field . ' = ? AND ' . $current_field . ' != ? AND ' . $filter_field . ' = ? LIMIT 1', $value, $current_value, $filter_value);
+        } elseif($filter_field && $filter_value) {
+            $results = ao()->db->query('SELECT * FROM ' . $table . ' WHERE ' . $field . ' = ? AND ' . $filter_field . ' = ? LIMIT 1', $value, $filter_value);
+        } elseif($current_field && $current_value) {
             $results = ao()->db->query('SELECT * FROM ' . $table . ' WHERE ' . $field . ' = ? AND ' . $current_field . ' != ? LIMIT 1', $value, $current_value);
         } else {
             $results = ao()->db->query('SELECT * FROM ' . $table . ' WHERE ' . $field . ' = ? LIMIT 1', $value);

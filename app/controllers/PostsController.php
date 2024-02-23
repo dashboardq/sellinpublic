@@ -75,6 +75,17 @@ class PostsController {
     }
 
     public function post($req, $res) {
-        return [];
+        try {
+            $response = APIService::call('/post/children/' . $req->params['post_id'], [], $req, $res);
+        } catch(Exception $e) {
+            $req->session->flash['error'] = $e->getMessage();
+            $res->view('alt/error');
+            exit;
+        }
+
+        $pagination = $response['meta']['pagination'];
+        $posts = $response['data'];
+
+        return compact('pagination', 'posts');
     }
 }

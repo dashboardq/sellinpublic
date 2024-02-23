@@ -18,7 +18,7 @@ class APIPostsController {
         $args['status'] = 'published';
 
         $posts = Post::where($args, [$per_page, $page]);
-        $posts = APIService::clean($posts);
+        $posts = APIService::cleanPosts($posts);
         $pagination = Post::count($args, [$per_page, $page, 'pagination', $req->path]); 
 
         $output = [];
@@ -38,13 +38,38 @@ class APIPostsController {
         $args['status'] = 'pending';
 
         $posts = Post::where($args, [$per_page, $page]);
-        $posts = APIService::clean($posts);
+        $posts = APIService::cleanPosts($posts);
         $pagination = Post::count($args, [$per_page, $page, 'pagination', $req->path]); 
 
         $output = [];
         $output['status'] = 'success';
         $output['messages'] = [];
         //$output['meta'] = meta($pagination);
+        $output['meta'] = ['pagination' => $pagination];
+        $output['data'] = data($posts);
+        return $output;
+    }
+
+    public function timelineUser($req, $res) {
+        $page = clean($req->query['page'] ?? 1, 'int', 1); 
+        $per_page = 20;
+
+        $username = Username::by('name', $req->params['username']);
+        if(!$username) {
+            return APIService::error('The user is not available.');
+        }
+
+        $args = [];
+        $args['status'] = 'published';
+        $args['user_id'] = $username->data['user_id'];
+
+        $posts = Post::where($args, [$per_page, $page]);
+        $posts = APIService::cleanPosts($posts);
+        $pagination = Post::count($args, [$per_page, $page, 'pagination', $req->path]); 
+
+        $output = [];
+        $output['status'] = 'success';
+        $output['messages'] = [];
         $output['meta'] = ['pagination' => $pagination];
         $output['data'] = data($posts);
         return $output;
@@ -85,6 +110,54 @@ class APIPostsController {
         $output['messages'] = ['Thank you for submitting your post. It will be publicly displayed in ' . $delay . '. New accounts have a delay in publishing to help protect against spam.'];
         $output['meta'] = new \stdClass();
         $output['data'] = $data;
+        return $output;
+    }
+
+    public function children($req, $res) {
+        $page = clean($req->query['page'] ?? 1, 'int', 1); 
+        $per_page = 20;
+
+        $args = [];
+        $args['id'] = $req->params['post_id'];
+        $args['status'] = 'published';
+
+        $posts = Post::where($args, [$per_page, $page]);
+        $posts = APIService::cleanPosts($posts);
+        $pagination = Post::count($args, [$per_page, $page, 'pagination', $req->path]); 
+
+        // If no posts, check if it is not published but is owned by the user.
+
+
+        // Get all the published replies
+
+
+        $output = [];
+        $output['status'] = 'success';
+        $output['messages'] = [];
+        $output['meta'] = ['pagination' => $pagination];
+        $output['data'] = data($posts);
+        return $output;
+    }
+
+    public function single($req, $res) {
+        $page = clean($req->query['page'] ?? 1, 'int', 1); 
+        $per_page = 20;
+
+        $args = [];
+        $args['id'] = $req->params['post_id'];
+        $args['status'] = 'published';
+
+        $posts = Post::where($args, [$per_page, $page]);
+        $posts = APIService::cleanPosts($posts);
+        $pagination = Post::count($args, [$per_page, $page, 'pagination', $req->path]); 
+
+        // If no posts, check if it is not published but is owned by the user.
+
+        $output = [];
+        $output['status'] = 'success';
+        $output['messages'] = [];
+        $output['meta'] = ['pagination' => $pagination];
+        $output['data'] = data($posts);
         return $output;
     }
 }

@@ -159,8 +159,8 @@ hr {
     clip-path: inset(50%);
 }
 #toggle_menu + label {
+    display: none;
     position: relative;
-    display: inline-block;
     padding: 0.5rem;
     background: #fff;
     cursor: pointer;
@@ -443,6 +443,7 @@ button.close:hover {
 
     /* BOF Navigation */
     #toggle_menu + label {
+        display: inline-block;
         background: url(/mavoc/images/tabler-icons/menu-2.svg) no-repeat;
         width: 24px;
         height: 24px;

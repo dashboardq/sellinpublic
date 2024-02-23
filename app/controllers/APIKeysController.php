@@ -17,7 +17,7 @@ class APIKeysController {
 
     public function create($req, $res) {
         $data = $req->val('data', [
-            'name' => ['required', ['dbUnique' => ['api_keys', 'id', $req->user_id]]],
+            'name' => ['required', ['dbUnique' => ['api_keys', '', '', 'user_id', $req->user_id]]],
         ]); 
 
         $args = [];

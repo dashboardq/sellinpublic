@@ -9,7 +9,9 @@ class Account extends Model {
 
     public function process($data) {
         $username = Username::by(['user_id' => $data['user_id'], 'primary' => 1]);
-        $data['username'] = $username->data;
+        if($username) {
+            $data['username'] = $username->data;
+        }
 
         return $data;
     }

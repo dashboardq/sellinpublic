@@ -7,6 +7,7 @@
                     <menu>
                         <li><a href="/">Latest</a></li>
                         <li><a href="/about">About</a></li>
+                        <li><a href="/pricing">Pricing</a></li>
                         <li><a href="/documentation">API</a></li>
                         <?php if($user): ?>
                         <li><a href="/post">Post</a></li>
