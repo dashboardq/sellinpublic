@@ -746,6 +746,8 @@ class HTML {
 
         if(isset($this->session->flash['fields'][$name])) {
             $value = $this->session->flash['fields'][$name];
+        } elseif(isset($this->res->fields[$name])) {
+            $value = $this->res->fields[$name];
         }
 
         $error = false;

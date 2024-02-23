@@ -76,7 +76,7 @@ class APIAccountsController {
             }
             if(count($args)) {
                 $account = Account::by('user_id', $req->user_id);
-                $account->update($data);
+                $account->update($args);
             }
         } else {
             $data = $req->val('data', [
@@ -84,8 +84,17 @@ class APIAccountsController {
                 'bio' => ['optional'],
             ]);
 
-            $account = Account::by('user_id', $req->user_id);
-            $account->update($data);
+            $args = [];
+            if(isset($data['display_name'])) {
+                $args['display_name'] = $data['display_name'];
+            }
+            if(isset($data['bio'])) {
+                $args['bio'] = $data['bio'];
+            }
+            if(count($args)) {
+                $account = Account::by('user_id', $req->user_id);
+                $account->update($args);
+            }
         }
 
         $output = [];

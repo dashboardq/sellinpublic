@@ -65,7 +65,7 @@ class AccountsController {
                 'bio' => ['optional'],
             ]);
 
-            APIService::call('/accounts', $data, $req, $res);
+            APIService::call('/account', $data, $req, $res);
         }
 
         $res->success('Account updated successfully.', '/account');
