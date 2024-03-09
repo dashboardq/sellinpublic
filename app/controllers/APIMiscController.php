@@ -16,7 +16,7 @@ class APIMiscController {
         return $output;
     }
 
-    public function helloPost($req, $res) {
+    public function helloSubmit($req, $res) {
         $data = $req->val($req->data, [
             'name' => ['required'],
         ]);

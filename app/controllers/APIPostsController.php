@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use app\models\Post;
+use app\models\Reaction;
+use app\models\Setting;
 use app\models\Username;
 
 use app\services\APIService;
@@ -16,7 +18,12 @@ class APIPostsController {
 
         $args = [];
         $args['status'] = 'published';
+        $args['type'] = 'post';
 
+        ao()->once('ao_model_order_posts', function($order) {
+            $order = ['sorted_at' => 'DESC'];
+            return $order;
+        });
         $posts = Post::where($args, [$per_page, $page]);
         $posts = APIService::cleanPosts($posts);
         $pagination = Post::count($args, [$per_page, $page, 'pagination', $req->path]); 
@@ -61,6 +68,7 @@ class APIPostsController {
 
         $args = [];
         $args['status'] = 'published';
+        $args['type'] = 'post';
         $args['user_id'] = $username->data['user_id'];
 
         $posts = Post::where($args, [$per_page, $page]);
@@ -78,36 +86,42 @@ class APIPostsController {
     public function create($req, $res) {
         $val = $req->val($req->data, [
             'post' => ['required'],
+            'parent_id' => ['optional'],
             'content' => ['optional'],
         ]);
 
-        $delay = '48 hours';
+        $delay = Setting::get($req->user_id, 'delay_post');
+        $delay_time = $delay . ' minutes';
 
         $published_at = new DateTime();
-        $published_at->modify('+' . $delay);
+        $published_at->modify('+' . $delay_time);
 
         $val['user_id'] = $req->user_id;
-        $val['username_id'] = $req->user->account->username;
         $val['status'] = 'pending';
         $val['published_at'] = $published_at;
+        $val['sorted_at'] = $published_at;
 
         $post = Post::create($val);
 
         $data = [];
         $data['id'] = $post->id;
         $data['user_id'] = $req->user_id;
+        $data['conversation_id'] = $post->data['conversation_id'];
+        $data['parent_id'] = $post->data['parent_id'];
+        $data['original_id'] = $post->data['original_id'];
         $data['post'] = $post->data['post'];
         $data['status'] = $post->data['status'];
         $data['created_at'] = $post->data['created_at']->format('c');
         $data['updated_at'] = $post->data['updated_at']->format('c');
         $data['published_at'] = $post->data['published_at']->format('c');
+        $data['sorted_at'] = $post->data['sorted_at']->format('c');
         $data['username'] = $req->user->data['account']['username']['name'];
         $data['display_name'] = $req->user->data['account']['display_name'];
         $data['bio'] = $req->user->data['account']['bio'];
 
         $output = [];
         $output['status'] = 'success';
-        $output['messages'] = ['Thank you for submitting your post. It will be publicly displayed in ' . $delay . '. New accounts have a delay in publishing to help protect against spam.'];
+        $output['messages'] = ['Thank you for submitting your post. It will be publicly displayed in ' . $delay_time . '. New accounts have a delay in publishing to help protect against spam.'];
         $output['meta'] = new \stdClass();
         $output['data'] = $data;
         return $output;
@@ -121,9 +135,10 @@ class APIPostsController {
         $args['id'] = $req->params['post_id'];
         $args['status'] = 'published';
 
-        $posts = Post::where($args, [$per_page, $page]);
+        //$posts = Post::where($args, [$per_page, $page]);
+        $posts = Post::thread($args, [$per_page, $page]);
         $posts = APIService::cleanPosts($posts);
-        $pagination = Post::count($args, [$per_page, $page, 'pagination', $req->path]); 
+        $pagination = Post::threadCount($args, [$per_page, $page, 'pagination', $req->path]); 
 
         // If no posts, check if it is not published but is owned by the user.
 

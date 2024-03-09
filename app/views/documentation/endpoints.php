@@ -11,9 +11,10 @@
             <main>
                 <div id="content" class="page">
                     <h2>Endpoints</h2>
-                    <p>There are currently 13 endpoints that can be used to interact with the server. Public endpoints can be used by anyone with an API key. Private endpoints require the user with the API key to have a Pro account.</p>
+                    <p>There are currently 32 endpoints that can be used to interact with the server. Public endpoints can be used by anyone with an API key. Private endpoints require the user with the API key to have a Pro account.</p>
                     <p>An API key can be created on the <a href="/api-keys">API Keys</a> page in your account. In order to upgrade to a Pro account, you can do that on the <a href="https://www.dashboardq.com/services">DashboadQ Services</a> page.</p>
                     <p>Below are the available endpoints (each of these endpoints starts with /api/v0):</p>
+
                     <p><strong>Public</strong></p>
                     <ul>
                         <li><a href="/documentation/endpoint/miscellaneous">GET /hello</a></li>
@@ -22,18 +23,40 @@
                         <li><a href="/documentation/endpoint/metrics">GET /metric/pendings</a></li>
                         <li><a href="/documentation/endpoint/metrics">GET /metric/posts</a></li>
                         <li><a href="/documentation/endpoint/metrics">GET /metric/usernames</a></li>
-
+                        <li><a href="/documentation/endpoint/posts">GET /post/children/{post_id}</a></li>
+                        <li><a href="/documentation/endpoint/posts">GET /post/single/{post_id}</a></li>
+                        <li><a href="/documentation/endpoint/reactions">GET /reactions/flags/all</a></li>
+                        <li><a href="/documentation/endpoint/reactions">GET /reactions/flags/{post_id}</a></li>
+                        <li><a href="/documentation/endpoint/reactions">GET /reactions/stars/all</a></li>
+                        <li><a href="/documentation/endpoint/reactions">GET /reactions/stars/{post_id}</a></li>
+                        <li><a href="/documentation/endpoint/posts">GET /timeline/user/{username}</a></li>
                     </ul>
+
                     <p><strong>Private</strong></p>
                     <ul>
                         <li><a href="/documentation/endpoint/account">GET /account</a></li>
                         <li><a href="/documentation/endpoint/account">POST /account</a></li>
+                        <li><a href="/documentation/endpoint/reactions">POST /flag/{post_id}</a></li>
+                        <li><a href="/documentation/endpoint/notifications">GET /notifications</a></li>
+                        <li><a href="/documentation/endpoint/notifications">GET /notifications/count</a></li>
+                        <li><a href="/documentation/endpoint/notifications">GET /notifications/count/unread</a></li>
+                        <li><a href="/documentation/endpoint/notifications">POST /notification/read/{notification_id}</a></li>
+                        <li><a href="/documentation/endpoint/notifications">POST /notification/unread/{notification_id}</a></li>
+                        <li><a href="/documentation/endpoint/notifications">POST /notifications/read</a></li>
+                        <li><a href="/documentation/endpoint/notifications">POST /notifications/unread</a></li>
                         <li><a href="/documentation/endpoint/posts">GET /pending</a></li>
                         <li><a href="/documentation/endpoint/posts">POST /post</a></li>
+                        <li><a href="/documentation/endpoint/reactions">GET /reactions/stars</a></li>
                         <li><a href="/documentation/endpoint/settings">GET /settings</a></li>
                         <li><a href="/documentation/endpoint/settings">GET /settings/timezones</a></li>
                         <li><a href="/documentation/endpoint/settings">POST /settings</a></li>
+                        <li><a href="/documentation/endpoint/reactions">POST /star/{post_id}</a></li>
+                        <li><a href="/documentation/endpoint/reactions">POST /unflag/{post_id}</a></li>
+                        <li><a href="/documentation/endpoint/reactions">POST /unstar/{post_id}</a></li>
                     </ul>
+
+
+
 
                 </div>
             </main>

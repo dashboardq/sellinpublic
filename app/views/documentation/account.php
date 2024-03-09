@@ -11,10 +11,13 @@
             <main>
                 <div id="content" class="page">
                     <h2>Account</h2>
-                    <p>All three of the account endpoints are private and require a Pro account.</p>
+                    <p>Both of the account endpoints are private and require a Pro account.</p>
 					<hr>
 					<h3>GET /account</h3>
-					<p>Provides details about the user account.</p>
+					<p>Private endpoint. Provides details about the user account.</p>
+
+                    <h4>Endpoint Example</h4>
+					<p>Below is a live example that can be copy and pasted.</p>
                     <div class="code">
                         <code>curl https://sandbox.sellinpublic.com/api/v0/account -u "demo:sip_api_sand_01234demo56789_key"</code>
                     </div>
@@ -27,21 +30,28 @@
   "messages": [],
   "meta": {},
   "data": {
-    "user_id": 2,
+    "user_id": 1,
     "username": "demo",
-    "display_name": "Demo User",
-    "bio": ""
+    "display_name": "Demo",
+    "bio": "",
+    "delay_post": "15 minutes",
+    "timezone": "UTC"
   }
-}</pre>
+}
+</pre>
                     </div>
 					<hr>
 					<h3>POST /account</h3>
-					<p>Updates the account with the information provided.</p>
+					<p>Private endpoint. Updates the account with the information provided.</p>
                     <h4>Request body</h4>
                     <p><strong>display_name</strong>: string<br>
                     The name that is display publicly on the user profile page and with each post.</p>
                     <p><strong>bio</strong>: string<br>
                     The text info that is displayed on the user's profile.</p>
+
+                    <h4>Endpoint Example</h4>
+					<p>Below is a live example that can be copy and pasted.</p>
+
                     <div class="code">
                         <code>curl https://sandbox.sellinpublic.com/api/v0/account -u "demo:sip_api_sand_01234demo56789_key" -d "display_name=Demo Updated"</code>
                     </div>
@@ -54,12 +64,15 @@
   "messages": [],
   "meta": {},
   "data": {
-    "user_id": 2,
+    "user_id": 1,
     "username": "demo",
     "display_name": "Demo Updated",
-    "bio": ""
+    "bio": "",
+    "delay_post": "15 minutes",
+    "timezone": "UTC"
   }
-}</pre>
+}
+</pre>
                     </div>
                 </div>
             </main>

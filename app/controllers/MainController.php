@@ -60,6 +60,10 @@ class MainController {
         return ['title' => 'Privacy Policy'];
     }
 
+    public function redirect($req, $res) {
+        $res->redirect(ao()->env('APP_PRIVATE_HOME'));
+    }
+
     public function terms($req, $res) {
         //$res->view('main/terms', ['title' => 'Terms of Use']);
         return ['title' => 'Terms of Use'];

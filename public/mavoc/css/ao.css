@@ -1,3 +1,7 @@
+:root {
+    --current-color: #118DF0;
+}
+
 * {
     margin-top: 0;
     box-sizing: border-box;
@@ -243,7 +247,10 @@ input[type=password] {
     border: 1px solid #e0e0e0;
     border-radius: 3px;
     color: #495057;
+    /*
     max-width: calc(100% - 24px);
+    */
+    max-width: 100%;
 }
 
 textarea {
@@ -278,6 +285,31 @@ button.close:hover {
     /*
     background: #d6d6d6;
     */
+    background: #ffffff;
+    opacity: 0.9;
+    box-shadow: 0 6px 14px 0 #0000001a;
+}
+[aria-label=Close] {
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+    background: #008000;
+    padding: 4px 4px 0 4px;
+    width: 30px;
+    color: #ffffff;
+    font-size: 24px;
+
+    background: transparent;
+    color: initial;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+}
+[aria-label=Close]:hover {
     background: #ffffff;
     opacity: 0.9;
     box-shadow: 0 6px 14px 0 #0000001a;
@@ -423,6 +455,33 @@ button.close:hover {
         transform: scale(1.0);
     }
 }
+
+.process input[type=submit]:after,
+.process a:after,
+.process button:after,
+.process .button:after,
+input[type=submit].process:after,
+button.process:after,
+.button.process:after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    display: block;
+    width: 100%;
+    border-bottom: 2px solid var(--current-color);
+
+    animation: process 1.4s infinite linear;
+}
+
+@keyframes process {              
+    0% {
+        width: 1%;        
+    }
+    100% {
+        width: 100%;        
+    } 
+} 
 
 .desktop {
     display: block;

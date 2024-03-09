@@ -21,7 +21,7 @@ class AuthController {
         return ['title' => 'Account'];
     }
 
-    public function accountPost($req, $res) {
+    public function accountSave($req, $res) {
         if(ao()->env('APP_LOGIN_TYPE') != 'db') {
             $res->error('There was a problem processing the requested action.');
         }
@@ -39,7 +39,7 @@ class AuthController {
         return ['title' => 'Change Password'];
     }
 
-    public function changePasswordPost($req, $res) {
+    public function changePasswordSave($req, $res) {
         if(ao()->env('APP_LOGIN_TYPE') != 'db') {
             $res->error('There was a problem processing the requested action.');
         }
@@ -57,7 +57,7 @@ class AuthController {
         return ['title' => 'Forgot Password'];
     }
 
-    public function forgotPasswordPost($req, $res) {
+    public function forgotPasswordSubmit($req, $res) {
         if(ao()->env('APP_LOGIN_TYPE') != 'db') {
             $res->error('There was a problem processing the requested action.');
         }
@@ -75,7 +75,7 @@ class AuthController {
         return ['title' => 'Login'];
     }
 
-    public function loginPost($req, $res) {
+    public function loginSubmit($req, $res) {
         $val = $req->val('data', [
             'login_email' => ['required', 'email'],
             'login_password' => ['required', 'password'],
@@ -117,7 +117,7 @@ class AuthController {
         $res->redirect($redirect);  
     }
 
-    public function registerPost($req, $res) {
+    public function registerSubmit($req, $res) {
         $val = $req->val('data', [
             'name' => ['required'],
             'email' => ['required', 'email', ['dbUnique' => 'users']],
@@ -142,7 +142,7 @@ class AuthController {
         return compact('title', 'token', 'user_id');
     }
 
-    public function resetPasswordPost($req, $res) {
+    public function resetPasswordSubmit($req, $res) {
         if(ao()->env('APP_LOGIN_TYPE') != 'db') {
             $res->error('There was a problem processing the requested action.');
         }

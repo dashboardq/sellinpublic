@@ -431,7 +431,7 @@ window._ao = {};
 	}
 
     function init() {
-        //ao.listen('click', '.overlay [aria-label=Close]', clickClose);
+        ao.listen('click', '.overlay [aria-label=Close]', clickClose);
 
         //ao.listen('submit', 'form[data-success]', ajaxForm);
     }

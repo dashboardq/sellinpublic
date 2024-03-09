@@ -822,6 +822,10 @@ class Model {
         }
         if($key && $value) {
             $sql .= ' WHERE ' . $quote . $key . $quote . ' = ?';
+            // Prep data (like converting DateTime to string
+            if($value instanceof DateTime) {
+                $value = $value->format('Y-m-d H:i:s');
+            }
             $args[] = $value;
         } elseif(is_array($key)) {
             $first = true;
@@ -834,6 +838,10 @@ class Model {
                 }
                 if(is_array($v) && isset($v[0]) && isset($v[1]) && in_array($v[0], self::$compare)) {
                     $sql .= ' ' . $quote . $k . $quote . ' ' . $v[0] . ' ?';
+                    // Prep data (like converting DateTime to string
+                    if($v[1] instanceof DateTime) {
+                        $v[1] = $v[1]->format('Y-m-d H:i:s');
+                    }
                     $args[] = $v[1];
                 } elseif(is_array($v) && isset($v[0]) && isset($v[0][0]) && in_array($v[0][0], self::$compare)) {
                     foreach($v as $i => $val) {
@@ -842,11 +850,19 @@ class Model {
                                 $sql .= ' AND';
                             }
                             $sql .= ' ' . $quote . $k . $quote . ' ' . $val[0] . ' ?';
+                            // Prep data (like converting DateTime to string
+                            if($v[1] instanceof DateTime) {
+                                $v[1] = $v[1]->format('Y-m-d H:i:s');
+                            }
                             $args[] = $val[1];
                         }
                     }
                 } else {
                     $sql .= ' ' . $quote . $k . $quote . ' = ?';
+                    // Prep data (like converting DateTime to string
+                    if($v instanceof DateTime) {
+                        $v = $v->format('Y-m-d H:i:s');
+                    }
                     $args[] = $v;
                 }
             }
@@ -891,6 +907,10 @@ class Model {
                     }
                     if(is_array($v) && isset($v[0]) && isset($v[1]) && in_array($v[0], self::$compare)) {
                         $sql .= ' ' . $quote . $k . $quote . ' ' . $v[0] . ' ?';
+                        // Prep data (like converting DateTime to string
+                        if($v[1] instanceof DateTime) {
+                            $v[1] = $v[1]->format('Y-m-d H:i:s');
+                        }
                         $values[] = $v[1];
                     } elseif(is_array($v) && isset($v[0]) && isset($v[0][0]) && in_array($v[0][0], self::$compare)) {
                         foreach($v as $i => $val) {
@@ -899,11 +919,19 @@ class Model {
                                     $sql .= ' AND';
                                 }
                                 $sql .= ' ' . $quote . $k . $quote . ' ' . $val[0] . ' ?';
+                                // Prep data (like converting DateTime to string
+                                if($v[1] instanceof DateTime) {
+                                    $v[1] = $v[1]->format('Y-m-d H:i:s');
+                                }
                                 $values[] = $val[1];
                             }
                         }
                     } else {
                         $sql .= ' ' . $quote . $k . $quote . ' = ?';
+                        // Prep data (like converting DateTime to string
+                        if($v instanceof DateTime) {
+                            $v = $v->format('Y-m-d H:i:s');
+                        }
                         $values[] = $v;
                     }
                 }

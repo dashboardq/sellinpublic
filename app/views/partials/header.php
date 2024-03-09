@@ -14,7 +14,7 @@
                         <li><a href="/account">Account</a></li>
                         <li><a href="#" onclick="event.preventDefault(); document.getElementById('logout').submit();">Logout</a></li>
                         <?php else: ?>
-                        <li><a href="/login">Create Account / Login</a></li>
+                        <li><a href="/login">Register / Login</a></li>
                         <?php endif; ?>
                     </menu>
                 </nav>

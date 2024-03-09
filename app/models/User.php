@@ -151,13 +151,22 @@ class User extends Model {
     }
 
     public function process($data) {
-        $account = Account::by('user_id', $data['id']);
-        $data['account'] = $account->data;
+        if(isset($data['id'])) {
+            $account = Account::by('user_id', $data['id']);
+            if($account) {
+                $data['account'] = $account->data;
+            } else {
+                $data['account'] = null;
+            }
 
-        $restriction = Restriction::by('user_id', $data['id']);
-        if($restriction) {
-            $data['premium_level'] = $restriction->data['premium_level'];
+            $restriction = Restriction::by('user_id', $data['id']);
+            if($restriction) {
+                $data['premium_level'] = $restriction->data['premium_level'];
+            } else {
+                $data['premium_level'] = 100;
+            }
         } else {
+            $data['account'] = null;
             $data['premium_level'] = 100;
         }
 

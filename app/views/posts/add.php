@@ -11,9 +11,11 @@
                 <div class="page">
                     <h2>Add A Post</h2>
 
+                    <?php if($delay != '1 minute'): ?>
                     <div class="notice warn">
-                        <p>New accounts have a delay added before the post will become public.</p>
+                        <p>New accounts have a delay added before the post will become public. The delay will decrease over time. Your current delay is <?php esc($delay); ?>.</p>
                     </div>
+                    <?php endif; ?>
 
                     <?php $res->html->messages(); ?>
                     <form method="POST">

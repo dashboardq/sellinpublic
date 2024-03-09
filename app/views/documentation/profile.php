@@ -15,12 +15,16 @@
 
 					<hr>
 					<h3>GET /profile/{username}</h3>
-					<p>Provides details about the user account.</p>
+					<p>Public endpoint. Provides details about the user account.</p>
+
                     <h4>URL params</h4>
                     <p><strong>username</strong>: string<br>
                     The username for the account.</p>
+
+                    <h4>Endpoint Example</h4>
+					<p>Below is a live example that can be copy and pasted.</p>
                     <div class="code">
-                        <code>curl https://sandbox.sellinpublic.com/api/v0/profile/demo -u "demo:sip_api_sand_01234demo56789_key"</code>
+                        <code>curl https://sandbox.sellinpublic.com/api/v0/profile/sandbox -u "demo:sip_api_sand_01234demo56789_key"</code>
                     </div>
 
                     <p>Below is the expected result from that cURL call:</p>
@@ -32,11 +36,12 @@
   "meta": {},
   "data": {
     "user_id": 2,
-    "username": "demo",
-    "display_name": "Demo User",
+    "username": "sandbox",
+    "display_name": "Sandbox",
     "bio": ""
   }
-}</pre>
+}
+</pre>
                     </div>
                 </div>
             </main>

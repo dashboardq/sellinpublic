@@ -15,7 +15,10 @@
 
 					<hr>
 					<h3>GET /metric/pendings</h3>
-					<p>Provides a count of pending posts.</p>
+					<p>Public endpoint. Provides a count of pending posts.</p>
+
+                    <h4>Endpoint Example</h4>
+					<p>Below is a live example that can be copy and pasted.</p>
                     <div class="code">
                         <code>curl https://sandbox.sellinpublic.com/api/v0/metric/pendings -u "demo:sip_api_sand_01234demo56789_key"</code>
                     </div>
@@ -28,14 +31,17 @@
   "messages": [],
   "meta": {},
   "data": {
-    "count": 2
+    "count": 1
   }
 }</pre>
                     </div>
 
 					<hr>
 					<h3>GET /metric/posts</h3>
-					<p>Provides a count of published posts.</p>
+					<p>Public endpoint. Provides a count of published posts.</p>
+
+                    <h4>Endpoint Example</h4>
+					<p>Below is a live example that can be copy and pasted.</p>
                     <div class="code">
                         <code>curl https://sandbox.sellinpublic.com/api/v0/metric/posts -u "demo:sip_api_sand_01234demo56789_key"</code>
                     </div>
@@ -48,14 +54,17 @@
   "messages": [],
   "meta": {},
   "data": {
-    "count": 3
+    "count": 8
   }
 }</pre>
                     </div>
 
 					<hr>
 					<h3>GET /metric/usernames</h3>
-					<p>Provides a count of usernames created.</p>
+					<p>Public endpoint. Provides a count of usernames created.</p>
+
+                    <h4>Endpoint Example</h4>
+					<p>Below is a live example that can be copy and pasted.</p>
                     <div class="code">
                         <code>curl https://sandbox.sellinpublic.com/api/v0/metric/usernames -u "demo:sip_api_sand_01234demo56789_key"</code>
                     </div>
@@ -68,7 +77,7 @@
   "messages": [],
   "meta": {},
   "data": {
-    "count": 2
+    "count": 4
   }
 }</pre>
                     </div>

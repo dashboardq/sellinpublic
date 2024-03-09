@@ -21,6 +21,83 @@ if(!function_exists('bufferStart')) {
     }   
 }
 
+if(!function_exists('calc')) {
+    // Need to eventually update this to use $args = func_get_args();
+    // This is going to be really ugly and messy and only work for certain cases for now.
+    // Really need to create a parser:
+    // https://github.com/dmaevsky/rd-parse
+    // https://en.wikipedia.org/wiki/Parse_tree
+    function calculate($formula, $x = 0, $y = 0, $z = 0) {   
+        $formula = preg_replace('/\s+/', '', $formula);
+        if(strtolower($formula) == 'x') {
+            $output = $x;
+        } elseif(strtolower($formula) == 'y') {
+            $output = $y;
+        } elseif(strtolower($formula) == 'z') {
+            $output = $z;
+        } else {
+            $output = $formula;
+        }
+
+        preg_match_all('/[+\/*\^%-(]|ceil/', $output, $matches);
+        $operators = $matches[0];
+        while(count($operators)) {
+            if(in_array('ceil', $operators)) {
+                preg_match('/(.*)ceil\((.*)\)(.*)/', $output, $args);
+
+                $a = calculate(trim($args[2]), $x, $y, $z);
+                $output = $args[1] . operate('ceil', $a) . $args[3];
+            } elseif(in_array('(', $operators)) {
+                preg_match('/(.*)\((.*)\)(.*)/', $output, $args);
+
+                $a = calculate(trim($args[2]), $x, $y, $z);
+                $output = $args[1] . operate('parenthesis', $a) . $args[3];
+            } elseif(in_array('^', $operators)) {
+                preg_match('/(.*)([xyz0-9.]+)\^([xyz0-9.]+)(.*)/', $output, $args);
+
+                $a = calculate(trim($args[2]), $x, $y, $z);
+                $b = calculate(trim($args[3]), $x, $y, $z);
+                $output = $args[1] . operate('^', $a, $b) . $args[4];
+            } elseif(in_array('%', $operators)) {
+                preg_match('/(.*)([xyz0-9.]+)%([xyz0-9.]+)(.*)/', $output, $args);
+
+                $a = calculate(trim($args[2]), $x, $y, $z);
+                $b = calculate(trim($args[3]), $x, $y, $z);
+                $output = $args[1] . operate('%', $a, $b) . $args[4];
+            } elseif(in_array('/', $operators)) {
+                preg_match('/(.*)([xyz0-9.]+)\/([xyz0-9.]+)(.*)/', $output, $args);
+
+                $a = calculate(trim($args[2]), $x, $y, $z);
+                $b = calculate(trim($args[3]), $x, $y, $z);
+                $output = $args[1] . operate('/', $a, $b) . $args[4];
+            } elseif(in_array('*', $operators)) {
+                preg_match('/(.*)([xyz0-9.]+)\*([xyz0-9.]+)(.*)/', $output, $args);
+
+                $a = calculate(trim($args[2]), $x, $y, $z);
+                $b = calculate(trim($args[3]), $x, $y, $z);
+                $output = $args[1] . operate('*', $a, $b) . $args[4];
+            } elseif(in_array('-', $operators)) {
+                preg_match('/(.*)([xyz0-9.]+)-([xyz0-9.]+)(.*)/', $output, $args);
+
+                $a = calculate(trim($args[2]), $x, $y, $z);
+                $b = calculate(trim($args[3]), $x, $y, $z);
+                $output = $args[1] . operate('-', $a, $b) . $args[4];
+            } elseif(in_array('+', $operators)) {
+                preg_match('/(.*)([xyz0-9.]+)\+([xyz0-9.]+)(.*)/', $output, $args);
+
+                $a = calculate(trim($args[2]), $x, $y, $z);
+                $b = calculate(trim($args[3]), $x, $y, $z);
+                $output = $args[1] . operate('+', $a, $b) . $args[4];
+            }
+
+            preg_match_all('/[+\/*\^%-(]|ceil/', $output, $matches);
+            $operators = $matches[0];
+        }
+
+        return $output;
+    }   
+}
+
 if(!function_exists('classify')) {
     function classify($input) {
         $input = ao()->hook('helper_split_input', $input);
@@ -281,6 +358,95 @@ if(!function_exists('esc')) {
     }   
 } 
 
+// From: https://stackoverflow.com/questions/1416697/converting-timestamp-to-time-ago-in-php-e-g-1-day-ago-2-days-ago
+// https://stackoverflow.com/a/18602474
+// Slightly modified to accept DateTime objects.
+if(!function_exists('future')) {
+    /*
+    function future($datetime, $full = false) {
+        $now = new \DateTime;
+        if(is_a($datetime, 'DateTime')) {
+            $ago = $datetime;
+        } else {
+            $ago = new \DateTime($datetime);
+        }
+        $diff = $now->diff($ago);
+
+        $diff->w = floor($diff->d / 7);
+        $diff->d -= $diff->w * 7;
+
+        //$string = array(
+            //'y' => 'year',
+            //'m' => 'month',
+            //'w' => 'week',
+            //'d' => 'day',
+            //'h' => 'hour',
+            //'i' => 'minute',
+            //'s' => 'second',
+        //);
+        //foreach ($string as $k => &$v) {
+            //if ($diff->$k) {
+                //$v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+            //} else {
+                //unset($string[$k]);
+            //}
+        //}
+        $string = array(
+            'y' => 'y',
+            'm' => 'm',
+            'w' => 'w',
+            'd' => 'd',
+            'h' => 'h',
+            'i' => 'm',
+            's' => 's',
+        );
+        foreach ($string as $k => &$v) {
+            if ($diff->$k) {
+                $v = $diff->$k . '' . $v;
+            } else {
+                unset($string[$k]);
+            }
+        }
+
+        if (!$full) $string = array_slice($string, 0, 1);
+        return $string ? implode(', ', $string) . ' ago' : 'just now';
+    }
+     */
+    function future($datetime, $full = false) {
+        $now = new \DateTime;
+        if(is_a($datetime, 'DateTime')) {
+            $ago = $datetime;
+        } else {
+            $ago = new \DateTime($datetime);
+        }
+        $diff = $now->diff($ago);
+
+        $output = '';
+        if($diff->y) {
+            $output = $diff->y . 'y to go';
+        } elseif($diff->m) {
+            $output = $diff->m . 'mo to go';
+        } elseif($diff->d) {
+            if($diff->d >= 7) {
+                $output = floor($diff->d/7) . 'w to go';
+            } else {
+                $output = $diff->d . 'd to go';
+            }
+        } elseif($diff->h) {
+            $output = $diff->h . 'h to go';
+        } elseif($diff->i) {
+            $output = $diff->i . 'm to go';
+        } elseif($diff->s) {
+            $output = $diff->s . 's to go';
+        } else {
+            $output = 'just now';
+        }
+
+        return $output;
+    }
+}
+
+
 if(!function_exists('meta')) {
     function meta($pagination) {   
         $output = [];
@@ -322,6 +488,30 @@ if(!function_exists('num')) {
     }
 }
 
+if(!function_exists('operate')) {
+    // Probably eventually need to build a parser.
+    function operate($operator, $x = 0, $y = 0, $z = 0) {   
+        if($operator == '+') {
+            $output = $x + $y;
+        } elseif($operator == '-') {
+            $output = $x - $y;
+        } elseif($operator == '*') {
+            $output = $x * $y;
+        } elseif($operator == '/') {
+            $output = $x / $y;
+        } elseif($operator == '^') {
+            $output = pow($x, $y);
+        } elseif($operator == '%') {
+            $output = $x % $y;
+        } elseif($operator == 'ceil') {
+            $output = ceil($x);
+        } elseif($operator == 'parenthesis') {
+            // Nothing actually calculated since parenthesis by themselves just determine priority.
+            $output = $x;
+        }
+        return $output;
+    }   
+}
 if(!function_exists('_out')) {
     function _out($input, $color = null) {   
         $output = $input;

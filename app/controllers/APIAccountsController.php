@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Account;
+use app\models\Setting;
 use app\models\User;
 use app\models\Username;
 
@@ -10,18 +11,22 @@ use app\services\APIService;
 
 class APIAccountsController {
     public function account($req, $res) {
-        $usernames = Username::where('user_id', $req->user->data['id']);
+        $usernames = Username::where('user_id', $req->user_id);
 
         // First time logging in, make sure they have a username
         if(count($usernames) == 0) {    
             return APIService::error('The user info requested does not appear to be valid.');
         }
 
+        $settings = Setting::get($req->user_id); 
+
         $output = [];
         $output['user_id'] = $usernames[0]->data['user_id'];
         $output['username'] = $usernames[0]->data['name'];
         $output['display_name'] = $req->user->data['account']['display_name'];
         $output['bio'] = $req->user->data['account']['bio'];
+        $output['delay_post'] = pluralize($settings['delay_post'], 'minute');
+        $output['timezone'] = $settings['timezone'];
 
         return APIService::data($output);
     }
@@ -97,11 +102,16 @@ class APIAccountsController {
             }
         }
 
+        $user = User::find($req->user_id);
+        $settings = Setting::get($req->user_id); 
+
         $output = [];
-        $output['user_id'] = $req->user_id;
-        $output['username'] = $req->user->data['account']['username']['name'];
-        $output['display_name'] = $req->user->data['account']['display_name'];
-        $output['bio'] = $req->user->data['account']['bio'];
+        $output['user_id'] = $user->id;
+        $output['username'] = $user->data['account']['username']['name'];
+        $output['display_name'] = $user->data['account']['display_name'];
+        $output['bio'] = $user->data['account']['bio'];
+        $output['delay_post'] = pluralize($settings['delay_post'], 'minute');
+        $output['timezone'] = $settings['timezone'];
 
         return APIService::data($output);
     }

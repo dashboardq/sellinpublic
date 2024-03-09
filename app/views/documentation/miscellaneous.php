@@ -11,11 +11,14 @@
             <main>
                 <div id="content" class="page">
                     <h2>Miscellaneous</h2>
-                    <p>All two of the miscellaneous endpoints are public and do not require a Pro account.</p>
+                    <p>Both of the miscellaneous endpoints are public and do not require a Pro account.</p>
 
 					<hr>
 					<h3>GET /hello</h3>
-					<p>Provides a simple test a GET endpoint.</p>
+					<p>Public endpoint. Provides a simple way to test a GET endpoint.</p>
+
+                    <h4>Endpoint Example</h4>
+					<p>Below is a live example that can be copy and pasted.</p>
                     <div class="code">
                         <code>curl https://sandbox.sellinpublic.com/api/v0/hello -u "demo:sip_api_sand_01234demo56789_key"</code>
                     </div>
@@ -35,7 +38,10 @@
 
 					<hr>
 					<h3>POST /hello</h3>
-					<p>Provides a simple way to test a POST endpoint.</p>
+					<p>Public endpoint. Provides a simple way to test a POST endpoint.</p>
+
+                    <h4>Endpoint Example</h4>
+					<p>Below is a live example that can be copy and pasted.</p>
                     <div class="code">
                         <code>curl https://sandbox.sellinpublic.com/api/v0/hello -u "demo:sip_api_sand_01234demo56789_key" -d "name=Friend"</code>
                     </div>

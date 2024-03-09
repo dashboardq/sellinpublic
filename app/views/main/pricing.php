@@ -16,8 +16,11 @@
                             <h3>$0 / month</h3>
                             <a href="/login" class="button">Get Started</a>
                             <ul>
+                                <li>Access to basic features</li>
                                 <li>Public API access</li>
+                                <?php /*
                                 <li>10 private message credits</li>
+                                 */ ?>
                             </ul>
                         </li>
                         <li class="card -highlight">
@@ -25,8 +28,11 @@
                             <h3>$8 / month</h3>
                             <a href="/login" class="button">Get Started</a>
                             <ul>
+                                <li>Access to pro features</li>
                                 <li>Public &amp; Private API access</li>
+                                <?php /*
                                 <li>100 private message credits</li>
+                                 */ ?>
                                 <li>Optional domain username</li>
                                 <li>Early access to upcoming beta features and access to pro features</li>
 <?php /*

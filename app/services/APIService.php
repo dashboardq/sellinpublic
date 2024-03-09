@@ -3,7 +3,12 @@
 namespace app\services;
 
 use app\controllers\APIAccountsController;
+use app\controllers\APINotificationsController;
 use app\controllers\APIPostsController;
+use app\controllers\APIReactionsController;
+
+use app\models\Post;
+use app\models\User;
 
 use mavoc\core\Exception;
 use mavoc\core\Request;
@@ -62,12 +67,15 @@ class APIService {
             if(count($parts) > 2) {
                 $first_slug = '/' . $parts[0];
                 $second_slug = '/' . $parts[1];
+                $third_slug = '/' . $parts[2];
             } elseif(count($parts) > 1) {
                 $first_slug = '/' . $parts[0];
-                $second_slug = '';
+                $second_slug = '/' . $parts[1];
+                $third_slug = '';
             } else {
                 $first_slug = $endpoint;
                 $second_slug = '';
+                $third_slug = '';
             }
             if($endpoint == '/account') {
                 $controller = new APIAccountsController();
@@ -86,6 +94,21 @@ class APIService {
             } elseif($endpoint == '/latest') {
                 $controller = new APIPostsController();
                 $response = $controller->latest($req, $res);
+            } elseif($endpoint == '/notifications') {
+                $controller = new APINotificationsController();
+                $response = $controller->list($req, $res);
+            } elseif($endpoint == '/notifications/count') {
+                $controller = new APINotificationsController();
+                $response = $controller->count($req, $res);
+            } elseif($endpoint == '/notifications/count/unread') {
+                $controller = new APINotificationsController();
+                $response = $controller->countUnread($req, $res);
+            } elseif($endpoint == '/notifications/read') {
+                $controller = new APINotificationsController();
+                $response = $controller->readAll($req, $res);
+            } elseif($endpoint == '/notifications/unread') {
+                $controller = new APINotificationsController();
+                $response = $controller->unreadAll($req, $res);
             } elseif($endpoint == '/pending') {
                 $controller = new APIPostsController();
                 $response = $controller->pending($req, $res);
@@ -103,18 +126,51 @@ class APIService {
                 } else {
                     //$response = $controller->read($req, $res);
                 }
+            } elseif($endpoint == '/reactions/flags/all') {
+                $controller = new APIReactionsController();
+                $response = $controller->flagsAll($req, $res);
+            } elseif($endpoint == '/reactions/stars') {
+                $controller = new APIReactionsController();
+                $response = $controller->stars($req, $res);
+            } elseif($endpoint == '/reactions/stars/all') {
+                $controller = new APIReactionsController();
+                $response = $controller->starsAll($req, $res);
             } elseif($first_slug == '/profile') {
                 $controller = new APIAccountsController();
                 $response = $controller->profile($req, $res);
+            } elseif($first_slug . $second_slug == '/notification/read') {
+                $controller = new APINotificationsController();
+                $response = $controller->read($req, $res);
+            } elseif($first_slug . $second_slug == '/notification/unread') {
+                $controller = new APINotificationsController();
+                $response = $controller->unread($req, $res);
             } elseif($first_slug . $second_slug == '/post/children') {
                 $controller = new APIPostsController();
                 $response = $controller->children($req, $res);
             } elseif($first_slug . $second_slug == '/post/single') {
                 $controller = new APIPostsController();
                 $response = $controller->single($req, $res);
+            } elseif($first_slug . $second_slug == '/reactions/flags') {
+                $controller = new APIReactionsController();
+                $response = $controller->flagsPost($req, $res);
+            } elseif($first_slug . $second_slug == '/reactions/stars') {
+                $controller = new APIReactionsController();
+                $response = $controller->starsPost($req, $res);
             } elseif($first_slug . $second_slug == '/timeline/user') {
                 $controller = new APIPostsController();
                 $response = $controller->timelineUser($req, $res);
+            } elseif($first_slug . $third_slug == '/post' . '/flag') {
+                $controller = new APIReactionsController();
+                $response = $controller->flag($req, $res);
+            } elseif($first_slug . $third_slug == '/post' . '/unflag') {
+                $controller = new APIReactionsController();
+                $response = $controller->unflag($req, $res);
+            } elseif($first_slug . $third_slug == '/post' . '/star') {
+                $controller = new APIReactionsController();
+                $response = $controller->star($req, $res);
+            } elseif($first_slug . $third_slug == '/post' . '/unstar') {
+                $controller = new APIReactionsController();
+                $response = $controller->unstar($req, $res);
             } else {
                 $response = self::error('The requested URL does not appear to be valid.');
             }
@@ -138,17 +194,34 @@ class APIService {
             foreach($response['data'] as $i => $item) {
                 if(is_array($item)) {
                     foreach($item as $key => $value) {
-                        // Update DateTime to DateTime objects and set user timezone.
-                        if(substr($key, -3) == '_at') {
-                            $response['data'][$i][$key] = new DateTime($value);
+                        // May need to change this to recursive if it gets multiple levels deep.
+                        if(is_array($value)) {
+                            foreach($value as $k => $v) {
+                                if(substr($k, -3) == '_at') {
+                                    $response['data'][$i][$key][$k] = new DateTime($v);
 
-                            $timezone = ao()->hook('ao_model_process_dates_timezone', 'UTC', '');
-                            $tz = new DateTimeZone($timezone);
-                            $dt_tz = new DateTime($value);
-                            $dt_tz->setTimezone($tz);
+                                    $timezone = ao()->hook('ao_model_process_dates_timezone', 'UTC', '');
+                                    $tz = new DateTimeZone($timezone);
+                                    $dt_tz = new DateTime($v);
+                                    $dt_tz->setTimezone($tz);
 
-                            $tz_key = substr($key, 0, -3) . '_tz';
-                            $response['data'][$i][$tz_key] = $dt_tz;
+                                    $tz_k = substr($k, 0, -3) . '_tz';
+                                    $response['data'][$i][$key][$tz_k] = $dt_tz;
+                                }
+                            }
+                        } else {
+                            // Update DateTime to DateTime objects and set user timezone.
+                            if(substr($key, -3) == '_at') {
+                                $response['data'][$i][$key] = new DateTime($value);
+
+                                $timezone = ao()->hook('ao_model_process_dates_timezone', 'UTC', '');
+                                $tz = new DateTimeZone($timezone);
+                                $dt_tz = new DateTime($value);
+                                $dt_tz->setTimezone($tz);
+
+                                $tz_key = substr($key, 0, -3) . '_tz';
+                                $response['data'][$i][$tz_key] = $dt_tz;
+                            }
                         }
                     }
                 }
@@ -174,8 +247,53 @@ class APIService {
         return $response;
     }
 
+    public static function cleanNotification($notification) {
+        $initiator = [];
+        $initiator['display_name'] = $notification->data['initiator']['account']['display_name'];
+        $initiator['username'] = $notification->data['initiator']['account']['username']['name'];
+        $initiator['bio'] = $notification->data['initiator']['account']['bio'];
+        $notification->data['initiator'] = $initiator;
+
+        if($notification->data['initiator_post_id']) {
+            $initiator_post = Post::find($notification->data['initiator_post_id']);
+            $initiator_post = self::cleanPost($initiator_post);
+            $notification->data['initiator_post'] = $initiator_post->data;
+        } else {
+            $notification->data['initiator_post'] = [];
+        }
+
+        $receiver_post = Post::find($notification->data['receiver_post_id']);
+        $receiver_post = self::cleanPost($receiver_post);
+        $notification->data['receiver_post'] = $receiver_post->data;
+
+        unset($notification->data['created_tz']);
+        unset($notification->data['updated_tz']);
+        return $notification;
+    }
+
+    public static function cleanNotifications($notifications) {
+        foreach($notifications as $i => $notification) {
+            $notifications[$i] = self::cleanNotification($notification);
+        }
+        return $notifications;
+    }
+
+    public static function cleanPost($post) {
+        $post->data['display_name'] = $post->data['user']['account']['display_name'];
+        $post->data['username'] = $post->data['user']['account']['username']['name'];
+        $post->data['bio'] = $post->data['user']['account']['bio'];
+        unset($post->data['user']);
+        unset($post->data['created_tz']);
+        unset($post->data['updated_tz']);
+        unset($post->data['published_tz']);
+        return $post;
+    }
+
     public static function cleanPosts($posts) {
         foreach($posts as $i => $post) {
+            $posts[$i] = self::cleanPost($post);
+
+            /*
             $posts[$i]->data['display_name'] = $post->data['user']['account']['display_name'];
             $posts[$i]->data['username'] = $post->data['user']['account']['username']['name'];
             $posts[$i]->data['bio'] = $post->data['user']['account']['bio'];
@@ -183,8 +301,39 @@ class APIService {
             unset($posts[$i]->data['created_tz']);
             unset($posts[$i]->data['updated_tz']);
             unset($posts[$i]->data['published_tz']);
+             */
         }
         return $posts;
+    }
+
+    public static function cleanReaction($reaction) {
+        $post = Post::find($reaction->data['post_id']);
+        $post = self::cleanPost($post);
+        $reaction->data['post'] = $post->data;
+
+        $user = User::find($reaction->data['user_id']);
+        $user = self::cleanUser($user);
+        $reaction->data['user'] = $user->data;
+
+        return $reaction;
+    }
+
+    public static function cleanReactions($reactions) {
+        foreach($reactions as $i => $reaction) {
+            $reactions[$i] = self::cleanReaction($reaction);
+        }
+        return $reactions;
+    }
+
+    public static function cleanUser($user) {
+        $output = new \stdClass();
+        $output->data = [];
+        $output->data['user_id'] = $user->id;
+        $output->data['username'] = $user->data['account']['username']['name'];
+        $output->data['display_name'] = $user->data['account']['display_name'];
+        $output->data['bio'] = $user->data['account']['bio'];
+
+        return $output;
     }
 
     public static function data($input, $meta = [], $messages = []) {

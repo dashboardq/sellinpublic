@@ -142,6 +142,8 @@ class Router {
                     if(!$logged_in && isset($restrictions['private'][$route])) {
                         if($req->type == 'api') {
                             $res->error('The requested endpoint requires a valid API key.');
+                        } elseif($req->ajax) {
+                            $res->error('The request requires you to be logged in. Please reload the page and login at the top right.');
                         } else {
                             $req->session->data['login_redirect'] = $req->uri;
                             $res->redirect(ao()->env('APP_PUBLIC_HOME'));

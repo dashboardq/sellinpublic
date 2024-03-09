@@ -72,6 +72,10 @@ class DocumentationController {
         return [];
     }
 
+    public function notifications($req, $res) {
+        return [];
+    }
+
     public function posts($req, $res) {
         return [];
     }
@@ -89,6 +93,10 @@ class DocumentationController {
     }
 
     public function profile($req, $res) {
+        return [];
+    }
+
+    public function reactions($req, $res) {
         return [];
     }
 

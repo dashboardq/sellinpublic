@@ -1,7 +1,9 @@
 /* Added to match profile page height */
+/*
 main .page {
     min-height: 108px;
 }
+*/
 
 textarea {
     height: 80px;
@@ -14,6 +16,14 @@ textarea {
     margin: 0 auto;
     padding-left: 78px;
     overflow-wrap: break-word;
+}
+.post.flag {
+    padding-left: 1.5rem;
+}
+.post:after {
+    content: '';
+    display: table;
+    clear: both;
 }
 main .post {
     background: #ffffff;
@@ -108,6 +118,16 @@ main .pagination {
     min-height: 564px; 
 }
 
+.page_documentation h3 {
+    margin: 1rem 0 .5rem;
+}
+.page_documentation h4 {
+    margin: 2rem 0 .5rem;
+}
+.page_documentation h4:after {
+    content: ':';
+}
+
 .code {
     /*
     position: sticky;          
@@ -186,6 +206,158 @@ main .pagination {
 }
 /* EOF: Profile */
 
+
+/* BOF: Actions post_actions */
+.actions:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+.actions > * {
+    display: inline-flex;
+    width: 40px;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 16px;
+}
+.actions a {
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+}
+.actions a:hover {
+    border-bottom: 1px solid currentColor;
+}
+.actions a[data-value="0"] {
+    opacity: 0;
+}
+.actions .flagged,
+.actions .unflagged {
+    float: right;
+    margin-right: 0;
+    width: auto;
+}
+
+.actions .flag,
+.actions .unflag {
+    display: none;
+}
+.actions .flagged .unflag {
+    display: block;
+}
+.actions .unflagged .flag {
+    display: block;
+}
+
+.actions .star,
+.actions .unstar {
+    display: none;
+}
+.actions .starred .unstar {
+    display: block;
+}
+.actions .unstarred .star {
+    display: block;
+}
+/* EOF: Actions post_actions */
+
+/* BOF: Notices */
+main > .notice {
+    max-width: calc(1200px - 2rem);
+    margin: 0 auto;
+}
+/* EOF: Notices */
+
+/* BOF: Threads */
+.depth {
+    padding-left: 0;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.depth_1 {
+    padding-left: 45px;
+}
+.depth_2 {
+    padding-left: 90px;
+}
+.depth_3 {
+    padding-left: 135px;
+}
+.depth_4 {
+    padding-left: 180px;
+}
+.depth_5 {
+    padding-left: 225px;
+}
+.depth_6 {
+    padding-left: 270px;
+}
+.depth_7 {
+    padding-left: 315px;
+}
+.depth_8 {
+    padding-left: 360px;
+}
+.depth_9 {
+    padding-left: 405px;
+}
+.depth_10 {
+    padding-left: 450px;
+}
+/* EOF: Threads */
+
+/* BOF: Notifications */
+.notification_count[data-count="0"] {
+    display: none;
+}
+.notification {
+    border-left: 5px solid #cbcbcb;
+    margin-left: 10px;
+    width: 100%;
+    max-width: 900px;
+    width: 100%;
+    width: calc(100% - 20px);
+    max-width: 900px;
+    padding-left: 10px;
+    box-sizing: border-box;
+}
+.notification.unread {
+    border-left: 5px solid #118DF0aa;
+}
+.notification.unread .mark_unread {
+    display: none;
+}
+.notification.read .mark_read {
+    display: none;
+}
+.page_notifications .page h2 {
+    margin: 0;
+}
+.page_notifications .page button {
+    position: absolute;
+    top: 1.5rem;
+    right: 1rem;
+}
+.page_notifications .post button {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+}
+.mark_unread button {
+    background: #cbcbcb;
+    --current-color: #cbcbcb;
+}
+/* EOF: Notifications */
+
+@media (min-width: 1200px) {
+    .page_documentation #sidebar_left menu.desktop {
+        position: sticky;
+        top: calc(100vh - 700px);
+        padding-bottom: 2rem;
+    }
+}
+
 @media (max-width: 1199px) {
     #app.columns_2 {
         display: block;
@@ -200,4 +372,37 @@ main .pagination {
         display: block;
     }
     /* EOF: Pricing */
+
+    /* BOF: Threads */
+    .depth_1 {
+        padding-left: 5%;
+    }
+    .depth_2 {
+        padding-left: 10%;
+    }
+    .depth_3 {
+        padding-left: 15%;
+    }
+    .depth_4 {
+        padding-left: 20%;
+    }
+    .depth_5 {
+        padding-left: 25%;
+    }
+    .depth_6 {
+        padding-left: 30%;
+    }
+    .depth_7 {
+        padding-left: 35%;
+    }
+    .depth_8 {
+        padding-left: 40%;
+    }
+    .depth_9 {
+        padding-left: 45%;
+    }
+    .depth_10 {
+        padding-left: 50%;
+    }
+    /* EOF: Threads */
 }

@@ -22,6 +22,18 @@ class Setting extends Model {
             'value' => 'Sunday',
             'editable' => 1,
         ],
+        'delay_post' => [
+            'name' => 'Delay Post',
+            'key' => 'delay_post',
+            'value' => 15,
+            'editable' => 0,
+        ],
+        'delay_dwindle' => [
+            'name' => 'Delay Dwindle',
+            'key' => 'delay_dwindle',
+            'value' => 'ceil(x/2)',
+            'editable' => 0,
+        ],
     ];
 
     public static function get($user_id = 0, $key = null) {

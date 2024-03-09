@@ -1,6 +1,6 @@
 # SellInPublic
 
-An open source, MIT licensed social network built with a custom PHP MVC backend framework and [TACE](https://www.agraddy.com/introducing-tace) for front end development. It is currently a very early alpha version of the software but the ultimate goal is to create a cross between modern social networks and older style forums. The software is build to support a community for builders and creators to share tips and ideas for sales and marketing but it could be used for any social network. The original community can be found at [SellInPublic.com](https://sellinpublic.com).
+An open source, MIT licensed social network built with a custom PHP MVC backend framework and [TACE](https://www.agraddy.com/introducing-tace) for front end development. It is currently a very early alpha version of the software but the ultimate goal is to create a cross between modern social networks and older style forums. The software is built to support a community for builders and creators to share tips and ideas for sales and marketing but it could be used for any social network. The original community can be found at [SellInPublic.com](https://sellinpublic.com).
 
 ---
 

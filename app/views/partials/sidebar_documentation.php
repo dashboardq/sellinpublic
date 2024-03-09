@@ -15,6 +15,8 @@
                             <li><a href="/documentation/endpoint/account">Account</a></li>
                             <li><a href="/documentation/endpoint/metrics">Metrics</a></li>
                             <li><a href="/documentation/endpoint/miscellaneous">Miscellaneous</a></li>
+                            <li><a href="/documentation/endpoint/notifications">Notifications</a></li>
+                            <li><a href="/documentation/endpoint/reactions">Reactions</a></li>
                             <li><a href="/documentation/endpoint/posts">Posts</a></li>
                             <li><a href="/documentation/endpoint/profile">Profile</a></li>
                             <li><a href="/documentation/endpoint/settings">Settings</a></li>
@@ -36,6 +38,8 @@
                             <li><a href="/documentation/endpoint/account#content">Account</a></li>
                             <li><a href="/documentation/endpoint/metrics#content">Metrics</a></li>
                             <li><a href="/documentation/endpoint/miscellaneous#content">Miscellaneous</a></li>
+                            <li><a href="/documentation/endpoint/notifications#content">Notifications</a></li>
+                            <li><a href="/documentation/endpoint/reactions#content">Reactions</a></li>
                             <li><a href="/documentation/endpoint/posts#content">Posts</a></li>
                             <li><a href="/documentation/endpoint/profile#content">Profile</a></li>
                             <li><a href="/documentation/endpoint/settings#content">Settings</a></li>

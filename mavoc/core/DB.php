@@ -99,6 +99,42 @@ class DB {
         }   
     } 
 
+    public function alterTableAdd($table, $args) {
+        $sql = '';
+
+        if(in_array($this->type, ['mysql'])) {
+            $sql = MySQL::alterTableAdd($table, $args);
+        } elseif(in_array($this->type, ['pgsql'])) {
+            $sql = PostgreSQL::alterTableAdd($table, $args);
+        }
+
+        return $sql;
+    }
+
+    public function alterTableDrop($table, $args) {
+        $sql = '';
+
+        if(in_array($this->type, ['mysql'])) {
+            $sql = MySQL::alterTableDrop($table, $args);
+        } elseif(in_array($this->type, ['pgsql'])) {
+            $sql = PostgreSQL::alterTableDrop($table, $args);
+        }
+
+        return $sql;
+    }
+
+    public function alterTableRename($table, $args) {
+        $sql = '';
+
+        if(in_array($this->type, ['mysql'])) {
+            $sql = MySQL::alterTableRename($table, $args);
+        } elseif(in_array($this->type, ['pgsql'])) {
+            $sql = PostgreSQL::alterTableRename($table, $args);
+        }
+
+        return $sql;
+    }
+
     public function createTable($table, $args) {
         $sql = '';
 
@@ -206,6 +242,18 @@ class DB {
         ao()->db->query($sql, $args);
 
         $this->last_insert_table = $table;
+    }
+
+    public function truncateTable($table) {
+        $sql = '';
+
+        if(in_array($this->type, ['mysql'])) {
+            $sql = MySQL::truncateTable($table);
+        } elseif(in_array($this->type, ['pgsql'])) {
+            $sql = PostgreSQL::truncateTable($table);
+        }
+
+        return $sql;
     }
 
     public function update($table, $id, $input = []) {

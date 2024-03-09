@@ -6,6 +6,8 @@ use app\models\Restriction;
 use app\models\Setting;
 use app\models\User;
 
+use app\services\APIService;
+
 use mavoc\core\Exception;
 
 use DateTime;
@@ -21,6 +23,7 @@ class App {
 		} 
 
         ao()->filter('ao_response_partial_args', [$this, 'cacheDate']);
+        ao()->filter('ao_response_partial_args', [$this, 'partials']);
         ao()->filter('ao_model_process_dates_timezone', [$this, 'processTimezone']);
 
         ao()->filter('helper_wordify_output', [$this, 'wordify']);
@@ -42,7 +45,7 @@ class App {
 
     public function cacheDate($vars, $view, $req, $res) {
         if($view == 'head' || $view == 'foot') {
-            $vars['cache_date'] = '2024-02-22';
+            $vars['cache_date'] = '2024-03-08';
         }
 
         return $vars;
@@ -61,6 +64,17 @@ class App {
             exit;
         }
     } 
+
+    public function partials($vars, $view, $req, $res) {
+        if($view == 'sidebar_account') {
+            $vars['notification_count'] = 3;
+
+            $response = APIService::call('/notifications/count/unread', [], $req, $res);
+            $vars['notification_count'] = $response['data'];
+        }
+
+        return $vars;
+    }
 
     public function processTimezone($timezone, $table) {
         // We don't want to end up in an infinite loop call Setting::get() over and over 

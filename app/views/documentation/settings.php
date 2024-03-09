@@ -15,7 +15,10 @@
 
 					<hr>
 					<h3>GET /settings</h3>
-					<p>Provides details about the user's settings.</p>
+					<p>Private endpoint. Provides details about the user's settings.</p>
+
+                    <h4>Endpoint Example</h4>
+					<p>Below is a live example that can be copy and pasted.</p>
                     <div class="code">
                         <code>curl https://sandbox.sellinpublic.com/api/v0/settings -u "demo:sip_api_sand_01234demo56789_key"</code>
                     </div>
@@ -35,7 +38,10 @@
 
 					<hr>
 					<h3>GET /settings/timezones</h3>
-					<p>Provides details about the user's settings.</p>
+					<p>Private endpoint. Provides a list of valid timezones.</p>
+
+                    <h4>Endpoint Example</h4>
+					<p>Below is a live example that can be copy and pasted.</p>
                     <div class="code">
                         <code>curl https://sandbox.sellinpublic.com/api/v0/settings/timezones -u "demo:sip_api_sand_01234demo56789_key"</code>
                     </div>
@@ -481,10 +487,14 @@
 
 					<hr>
 					<h3>POST /settings</h3>
-					<p>Updates the user settings with the information provided.</p>
+					<p>Private endpoint. Updates the user settings with the information provided.</p>
+
                     <h4>Request body</h4>
                     <p><strong>timezone</strong>: string<br>
                     The timezone from the timezone list.</p>
+
+                    <h4>Endpoint Example</h4>
+					<p>Below is a live example that can be copy and pasted.</p>
                     <div class="code">
                         <code>curl https://sandbox.sellinpublic.com/api/v0/settings -u "demo:sip_api_sand_01234demo56789_key" -d "timezone=America/Chicago"</code>
                     </div>
