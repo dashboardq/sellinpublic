@@ -53,7 +53,7 @@ class Session {
                 if(isset($_SESSION['user_id'])) {
                     if(ao()->env('APP_LOGIN_TYPE') == 'db') { 
                         $this->user = User::find($_SESSION['user_id']);
-                    } elseif(ao()->env('APP_LOGIN_TYPE') == 'db') { 
+                    } elseif(ao()->env('APP_LOGIN_TYPE') == 'list') { 
                         $this->user = User::local($_SESSION['user_id']);
                     }
                     if($this->user) {

@@ -45,7 +45,7 @@ class App {
 
     public function cacheDate($vars, $view, $req, $res) {
         if($view == 'head' || $view == 'foot') {
-            $vars['cache_date'] = '2024-03-08';
+            $vars['cache_date'] = '2024-03-09';
         }
 
         return $vars;
@@ -67,8 +67,6 @@ class App {
 
     public function partials($vars, $view, $req, $res) {
         if($view == 'sidebar_account') {
-            $vars['notification_count'] = 3;
-
             $response = APIService::call('/notifications/count/unread', [], $req, $res);
             $vars['notification_count'] = $response['data'];
         }

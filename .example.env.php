@@ -25,6 +25,7 @@ return [
     // Terms and Privacy info
     'APP_PRIVACY_UPDATED' => 'July 15, 2022',
     'APP_TERMS_UPDATED' => 'July 15, 2022',
+    'APP_DESCRIPTION' => 'A simple social network app.', 
 
 	// The 'list' option is only used for simple, non-database sites.
     'APP_LOGIN_TYPE' => 'db', // Options: none, list, db (or options from other plugins)
@@ -44,6 +45,8 @@ return [
     'APP_ANALYTICS' => '<script></script>', 
 
     'APP_KEYS' => $keys, 
+
+    'APP_USER_DOMAIN' => '', // On production site, this is set to '.sip.name'. Set it to '' if you do not want to use a default domain.
 
     // Mavoc
     'AO_MAINTENANCE' => false, // Set to true will show the maintenance page.
@@ -100,5 +103,10 @@ return [
     'SERVICE_CLIENT_ID' => 'api_id',
     'SERVICE_CLIENT_SECRET' => 'api_secret',
     'SERVICE_USER_AGENT' => 'some_services_require_this_item', 
+
+    // Rsync
+    'RSYNC_SERVERS' => [
+        'prod' => 'user@example.com:/var/www/example.com',
+    ],
 ];
 

@@ -34,6 +34,11 @@ class Local {
             $output .= "\n\n";
         } elseif($view == 'view_app_before') {
             $output = '<div id="environment" class="notice error"><p>Currently viewing the dev server.</p></div>';
+        } elseif($view == 'view_notice_before') {
+            bufferStart();
+        } elseif($view == 'view_notice_after') {
+            bufferHide();
+            $output = '<div class="notice"><p>This is a custom message.</p></div>';
         }
         return $output;
     }

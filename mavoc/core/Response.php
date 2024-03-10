@@ -100,10 +100,10 @@ class Response {
     public function _partial($view, $args = []) {   
         $view = ao()->hook('ao_response_partial_start', $view, $args, $this->req, $this);
 
-		$output = '';
-		$dir = ao()->env('AO_APP_DIR') . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'partials' . DIRECTORY_SEPARATOR;
-		$file = $view . '.php';
-		$path = $dir . $file;
+        $output = '';
+        $dir = ao()->env('AO_APP_DIR') . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'partials' . DIRECTORY_SEPARATOR;
+        $file = $view . '.php';
+        $path = $dir . $file;
 
         $args = array_merge($this->args, $args);
         $args = ao()->hook('ao_response_partial_args', $args, $view, $this->req, $this);
@@ -121,7 +121,7 @@ class Response {
         }   
 
         $output = ao()->hook('ao_response_partial_finish', $output, $view, $args, $this->req, $this);
-		return $output;
+        return $output;
     }
 
     public function partial($view, $args = []) {

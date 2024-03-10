@@ -232,7 +232,7 @@ button,
 input[type=submit]:hover,
 button:hover,
 .button:hover {
-    background: #118DF0;;
+    background: #118DF0;
     opacity: 0.9;
 }
 
@@ -541,9 +541,6 @@ button.process:after,
 	}
     tbody {
         display: block;
-    }
-    tbody:empty {
-        content: 'No results'
     }
     tr {
         display: block;

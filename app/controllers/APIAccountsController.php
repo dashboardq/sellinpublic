@@ -32,6 +32,15 @@ class APIAccountsController {
     }
 
     public function profile($req, $res) {
+        // Remove the default domain name if it exists
+        $user_domain = ao()->env('APP_USER_DOMAIN');
+        if($user_domain) {
+            $length = strlen($user_domain);
+            if(substr($req->params['username'], -1 * $length) == $user_domain) {
+                $req->params['username'] = substr($req->params['username'], 0, -1 * $length);
+            }
+        }
+
         $username = Username::by('name', $req->params['username']);
 
         if(!$username) {    

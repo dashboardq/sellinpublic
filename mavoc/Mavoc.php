@@ -322,7 +322,7 @@ class Mavoc {
                 $redirect = '/';
             }
             $redirect = $this->hook('ao_final_exception_redirect', $redirect, $e, $this->request, $this->response);
-            
+
             $this->response->error($e->getMessage(), $redirect);
         }
 

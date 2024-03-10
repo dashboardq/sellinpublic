@@ -65,10 +65,21 @@ main .pagination {
     font-weight: bold;
 }
 .meta .username {
+    /*
     text-decoration: underline;
+    */
 }
 .meta .published_at {
     float: right;
+    /*
+    text-decoration: underline;
+    */
+}
+
+.meta a {
+    text-decoration: none;
+}
+.meta a:hover {
     text-decoration: underline;
 }
 

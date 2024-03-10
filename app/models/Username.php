@@ -12,11 +12,11 @@ class Username extends Model {
     }
 
     public function process($data) {
-        /*
-        if(strpos($data['name'], '.') == false) {
-            $data['name'] = $data['name'] . '.sip.name';
+        // Add default domain if it is set and another domain is not set for the user.
+        $user_domain = ao()->env('APP_USER_DOMAIN');
+        if($user_domain && strpos($data['name'], '.') == false) {
+            $data['name'] = $data['name'] . $user_domain;
         }
-         */
 
         return $data;
     }
