@@ -3,6 +3,7 @@
 namespace mavoc\core;
 
 use app\models\APIKey;
+use app\models\RefreshLogin;
 use app\models\User;
 
 class Session {
@@ -66,6 +67,14 @@ class Session {
                 }
             }
 
+            if($this->user_id == 0) {
+                $refresh = RefreshLogin::refresh();
+                if(isset($refresh['user']) && isset($refresh['user_id'])) {
+                    $this->user = $refresh['user'];
+                    $this->user_id = $refresh['user_id'];
+                }
+            }
+
             if(isset($_SESSION['data'])) {
                 $this->data = $_SESSION['data'];
             } else {
@@ -111,6 +120,8 @@ class Session {
 
     public function logout() {
         session_destroy();
+
+        RefreshLogin::destroy();
     }
 
     public function save() {

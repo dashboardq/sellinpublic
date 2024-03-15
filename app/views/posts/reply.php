@@ -24,13 +24,15 @@
                     </div>
                     <?php endforeach; ?>
 
+                    <?php if($delay != '1 minute'): ?>
                     <div class="notice warn">
-                        <p>New accounts have a delay added before the post will become public.</p>
+                        <p>New accounts have a delay added before the post will become public. The delay will decrease over time. Your current delay is <?php esc($delay); ?>.</p>
                     </div>
+                    <?php endif; ?>
 
                     <form method="POST">
-                        <textarea name="post" placeholder="Reply to the message above..."></textarea>
-                        <p>240 characters max</p>
+                        <?php $res->html->textareaRaw('Reply to the message above...', 'post', '', '', 'id="post"'); ?>
+                        <p data-max="240" data-watch="#post">240 characters max</p>
 
                         <?php $res->html->submit('Post'); ?>
                     </form>

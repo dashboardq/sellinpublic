@@ -25,7 +25,7 @@
                         @<a href="/<?php esc($post['username']); ?>" class="username"><?php esc($post['username']); ?></a> 
                         <a href="/<?php esc($post['username']); ?>/<?php esc($post['id']); ?>" class="published_at"><?php esc(future($post['published_tz'])); ?></a> 
                     </div>
-                    <p><?php echo nl2br(_esc($post['post'])); ?></p>
+                    <p><?php echo \app\handlify(linkify(nl2br(_esc($post['post'])))); ?></p>
                 </div>
                 <?php endforeach; ?>
 

@@ -20,6 +20,18 @@
         holder.remove();
     }
 
+    function inputTextarea(e) {
+        var $textarea = e.target;
+        var id = $textarea.id;
+        var $counter = ao.qs('[data-watch="#' + id + '"]');
+        if($counter) {
+            var length = $textarea.value.length;
+            var max = $counter.getAttribute('data-max');
+            var remaining = max - length;
+            $counter.innerText = max + ' characters max / ' + remaining + ' characters remaining';
+        }
+    }
+
     function postURL(e) {
         var $a;
         var $group;
@@ -183,6 +195,8 @@
         ao.listen('click', 'a.star', postURL);
         ao.listen('click', 'a.unflag', postURL);
         ao.listen('click', 'a.unstar', postURL);
+
+        ao.listen('input', 'textarea', inputTextarea);
     }
 
     init();

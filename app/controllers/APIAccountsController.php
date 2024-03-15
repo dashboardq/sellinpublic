@@ -22,7 +22,7 @@ class APIAccountsController {
 
         $output = [];
         $output['user_id'] = $usernames[0]->data['user_id'];
-        $output['username'] = $usernames[0]->data['name'];
+        $output['username'] = $usernames[0]->data['username'];
         $output['display_name'] = $req->user->data['account']['display_name'];
         $output['bio'] = $req->user->data['account']['bio'];
         $output['delay_post'] = pluralize($settings['delay_post'], 'minute');
@@ -54,7 +54,7 @@ class APIAccountsController {
 
         $output = [];
         $output['user_id'] = $username->data['user_id'];
-        $output['username'] = $username->data['name'];
+        $output['username'] = $username->data['username'];
         $output['display_name'] = $user->data['account']['display_name'];
         $output['bio'] = $user->data['account']['bio'];
 
@@ -116,7 +116,7 @@ class APIAccountsController {
 
         $output = [];
         $output['user_id'] = $user->id;
-        $output['username'] = $user->data['account']['username']['name'];
+        $output['username'] = $user->data['account']['username']['username'];
         $output['display_name'] = $user->data['account']['display_name'];
         $output['bio'] = $user->data['account']['bio'];
         $output['delay_post'] = pluralize($settings['delay_post'], 'minute');

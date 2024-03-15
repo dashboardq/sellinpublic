@@ -28,7 +28,7 @@ class APIReactionsController {
         $data['created_at'] = $post->data['created_at']->format('c');
         $data['updated_at'] = $post->data['updated_at']->format('c');
         $data['published_at'] = $post->data['published_at']->format('c');
-        $data['username'] = $req->user->data['account']['username']['name'];
+        $data['username'] = $req->user->data['account']['username']['username'];
         $data['display_name'] = $req->user->data['account']['display_name'];
         $data['bio'] = $req->user->data['account']['bio'];
 
@@ -95,7 +95,7 @@ class APIReactionsController {
         $data['created_at'] = $post->data['created_at']->format('c');
         $data['updated_at'] = $post->data['updated_at']->format('c');
         $data['published_at'] = $post->data['published_at']->format('c');
-        $data['username'] = $req->user->data['account']['username']['name'];
+        $data['username'] = $req->user->data['account']['username']['username'];
         $data['display_name'] = $req->user->data['account']['display_name'];
         $data['bio'] = $req->user->data['account']['bio'];
 
@@ -182,7 +182,7 @@ class APIReactionsController {
         $data['created_at'] = $post->data['created_at']->format('c');
         $data['updated_at'] = $post->data['updated_at']->format('c');
         $data['published_at'] = $post->data['published_at']->format('c');
-        $data['username'] = $req->user->data['account']['username']['name'];
+        $data['username'] = $req->user->data['account']['username']['username'];
         $data['display_name'] = $req->user->data['account']['display_name'];
         $data['bio'] = $req->user->data['account']['bio'];
 
@@ -210,7 +210,7 @@ class APIReactionsController {
         $data['created_at'] = $post->data['created_at']->format('c');
         $data['updated_at'] = $post->data['updated_at']->format('c');
         $data['published_at'] = $post->data['published_at']->format('c');
-        $data['username'] = $req->user->data['account']['username']['name'];
+        $data['username'] = $req->user->data['account']['username']['username'];
         $data['display_name'] = $req->user->data['account']['display_name'];
         $data['bio'] = $req->user->data['account']['bio'];
 

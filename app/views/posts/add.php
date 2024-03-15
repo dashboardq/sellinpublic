@@ -19,8 +19,8 @@
 
                     <?php $res->html->messages(); ?>
                     <form method="POST">
-                        <textarea name="post" placeholder="Introduce yourself or post an update..."></textarea>
-                        <p>240 characters max</p>
+                        <?php $res->html->textareaRaw('Introduce yourself or post an update...', 'post', '', '', 'id="post"'); ?>
+                        <p data-max="240" data-watch="#post">240 characters max</p>
 
                         <?php $res->html->submit('Post'); ?>
                     </form>

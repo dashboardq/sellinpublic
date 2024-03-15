@@ -51,6 +51,11 @@ class Post extends Model {
             }
 
             $ancestor->data['replies'] += 1;
+            // Bump the parent
+            if($ancestor->data['parent_id'] == 0) {
+                $ancestor->data['sorted_at'] = now();
+                $ancestor->data['bumps'] += 1;
+            }
             $ancestor->save();
         }
 
@@ -64,6 +69,10 @@ class Post extends Model {
         // Don't update the sorted_at date when a post is flagged.
         if($sorted_date) {
             $args['sorted_at'] = now();
+            // Bump if original post 
+            if($post->data['parent_id'] == 0) {
+                $args['bumps'] = $post->data['bumps'] + 1;
+            }
 
             // Create notification if the creator of the post is not the user who starred it.
             if($post->data['user_id'] != $user_id) {
@@ -117,7 +126,7 @@ class Post extends Model {
         $username = Username::primary($data['user_id']);
 
         $data['user'] = $user->data;
-        $data['username'] = $username->data['name'];
+        $data['username'] = $username->data['username'];
 
         $replied = false;
         $flagged = false;

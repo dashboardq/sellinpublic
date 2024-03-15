@@ -85,13 +85,14 @@ class APIPostsController {
 
     public function create($req, $res) {
         $val = $req->val($req->data, [
-            'post' => ['required'],
+            'post' => ['required', ['maxLength' => 240]],
             'parent_id' => ['optional'],
             'content' => ['optional'],
         ]);
 
         $delay = Setting::get($req->user_id, 'delay_post');
-        $delay_time = $delay . ' minutes';
+        //$delay_time = $delay . ' minutes';
+        $delay_time = pluralize($delay, 'minute');
 
         $published_at = new DateTime();
         $published_at->modify('+' . $delay_time);
@@ -115,13 +116,17 @@ class APIPostsController {
         $data['updated_at'] = $post->data['updated_at']->format('c');
         $data['published_at'] = $post->data['published_at']->format('c');
         $data['sorted_at'] = $post->data['sorted_at']->format('c');
-        $data['username'] = $req->user->data['account']['username']['name'];
+        $data['username'] = $req->user->data['account']['username']['username'];
         $data['display_name'] = $req->user->data['account']['display_name'];
         $data['bio'] = $req->user->data['account']['bio'];
 
         $output = [];
         $output['status'] = 'success';
-        $output['messages'] = ['Thank you for submitting your post. It will be publicly displayed in ' . $delay_time . '. New accounts have a delay in publishing to help protect against spam.'];
+        if($delay_time == '1 minute') {
+            $output['messages'] = ['Thank you for submitting your post. It will be publicly displayed in ' . $delay_time . '.'];
+        } else {
+            $output['messages'] = ['Thank you for submitting your post. It will be publicly displayed in ' . $delay_time . '. New accounts have a delay in publishing to help protect against spam.'];
+        }
         $output['meta'] = new \stdClass();
         $output['data'] = $data;
         return $output;

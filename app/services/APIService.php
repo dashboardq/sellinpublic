@@ -82,6 +82,7 @@ class APIService {
                 if(count($data)) {
                     // Create a fake request to pass the data.
                     $request = new Request();
+                    $request->res = $res;
                     $request->type = 'api';
                     $request->data = $data;
                     $request->user = $req->user;
@@ -117,6 +118,7 @@ class APIService {
                 if(count($data)) {
                     // Create a fake request to pass the data.
                     $request = new Request();
+                    $request->res = $res;
                     $request->type = 'api';
                     $request->data = $data;
                     $request->user = $req->user;
@@ -280,7 +282,7 @@ class APIService {
 
     public static function cleanPost($post) {
         $post->data['display_name'] = $post->data['user']['account']['display_name'];
-        $post->data['username'] = $post->data['user']['account']['username']['name'];
+        $post->data['username'] = $post->data['user']['account']['username']['username'];
         $post->data['bio'] = $post->data['user']['account']['bio'];
         unset($post->data['user']);
         unset($post->data['created_tz']);

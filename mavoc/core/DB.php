@@ -123,6 +123,18 @@ class DB {
         return $sql;
     }
 
+    public function alterTableModify($table, $args) {
+        $sql = '';
+
+        if(in_array($this->type, ['mysql'])) {
+            $sql = MySQL::alterTableModify($table, $args);
+        } elseif(in_array($this->type, ['pgsql'])) {
+            $sql = PostgreSQL::alterTableModify($table, $args);
+        }
+
+        return $sql;
+    }
+
     public function alterTableRename($table, $args) {
         $sql = '';
 

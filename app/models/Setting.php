@@ -25,7 +25,7 @@ class Setting extends Model {
         'delay_post' => [
             'name' => 'Delay Post',
             'key' => 'delay_post',
-            'value' => 15,
+            'value' => 2,
             'editable' => 0,
         ],
         'delay_dwindle' => [

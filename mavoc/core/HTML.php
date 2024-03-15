@@ -739,7 +739,7 @@ class HTML {
         echo $output;
     }
 
-    public function _textarea($label, $name = '', $value = '') {
+    public function _textarea($label, $name = '', $value = '', $class = '', $extra = '') {
         if(!$name) {
             $name = underscorify($label);
         }
@@ -764,7 +764,14 @@ class HTML {
         $output .= "\n";
         $output .= '<label>' . _esc($label) . '</label>';
         $output .= "\n";
-        $output .= '<textarea type="text" name="' . _esc($name) . '" placeholder="' . _esc($label) . '">';
+        $output .= '<textarea type="text" name="' . _esc($name) . '" placeholder="' . _esc($label) . '" ';
+        $output .= 'class="' . $class . '" ';
+        // Be careful with $extra values - they are not escaped.
+        // Do not use untrusted data.
+        if($extra) {
+            $output .= $extra;
+        }
+        $output .= '>';
         $output .= _esc($value);
         $output .= '</textarea>';
         $output .= "\n";
@@ -774,9 +781,45 @@ class HTML {
         return $output;
     }
 
-    public function textarea($label, $name = '', $value = '') {
-        $output = $this->_textarea($label, $name, $value);
+    public function textarea($label, $name = '', $value = '', $class = '', $extra = '') {
+        $output = $this->_textarea($label, $name, $value, $class, $extra);
         echo $output;
     }
 
+    public function _textareaRaw($label, $name = '', $value = '', $class = '', $extra = '') {
+        if(!$name) {
+            $name = underscorify($label);
+        }
+
+        if(isset($this->session->flash['fields'][$name])) {
+            $value = $this->session->flash['fields'][$name];
+        } elseif(isset($this->res->fields[$name])) {
+            $value = $this->res->fields[$name];
+        }
+
+        $error = false;
+        if(isset($this->session->flash['error'][$name])) {
+            $error = true;
+        }
+
+        $output = '';
+        $output .= '<textarea type="text" name="' . _esc($name) . '" placeholder="' . _esc($label) . '" ';
+        $output .= 'class="' . $class . '" ';
+        // Be careful with $extra values - they are not escaped.
+        // Do not use untrusted data.
+        if($extra) {
+            $output .= $extra;
+        }
+        $output .= '>';
+        $output .= _esc($value);
+        $output .= '</textarea>';
+        $output .= "\n";
+
+        return $output;
+    }
+
+    public function textareaRaw($label, $name = '', $value = '', $class = '', $extra = '') {
+        $output = $this->_textareaRaw($label, $name, $value, $class, $extra);
+        echo $output;
+    }
 }

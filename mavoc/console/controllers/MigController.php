@@ -52,6 +52,13 @@ $content = <<<PHP
     ]);
     \$db->query(\$sql);
 
+
+    \$sql = \$db->alterTableModify('$table', [
+        'post' => 'text',
+    ]);
+    \$db->query(\$sql);
+
+
     \$sql = \$db->alterTableAdd('$table', [
         'user_id' => ['type' => 'id', 'after' => 'post_id'],
 
@@ -89,6 +96,12 @@ SQL;
 \$down = function(\$db) {
     \$sql = \$db->alterTableRename('$table', [
         'new_col_name' => 'old_col_name',
+    ]);
+    \$db->query(\$sql);
+
+
+    \$sql = \$db->alterTableModify('$table', [
+        'post' => 'string',
     ]);
     \$db->query(\$sql);
 

@@ -217,6 +217,52 @@ class Validators {
         return $output;
     }
 
+    public function equalLength($input, $field) {
+        $args = func_get_args();
+        $input = $args[0];
+        $field = $args[1];
+        $equal = $args[2];
+        $value = $input[$field] ?? '';
+
+        if(strlen($value) != $equal) {
+            return false;
+        }
+
+        return true;                                                                                               
+    }   
+    public function equalLengthMessage($input, $field) {
+        $args = func_get_args();
+        $input = $args[0];
+        $field = $args[1];
+        $equal = $args[2];
+
+        $output = 'The ' . $field . ' field must be ' . pluralize($equal, 'character') . ' long.';
+        return $output;
+    }
+
+    public function equalValue($input, $field) {
+        $args = func_get_args();
+        $input = $args[0];
+        $field = $args[1];
+        $equal = $args[2];
+        $value = $input[$field] ?? 0;
+
+        if($value != $equal) {
+            return false;
+        }
+
+        return true;                                                                                               
+    }   
+    public function equalValueMessage($input, $field) {
+        $args = func_get_args();
+        $input = $args[0];
+        $field = $args[1];
+        $equal = $args[2];
+
+        $output = 'The ' . $field . ' field must equal ' . $equal . '.';
+        return $output;
+    }
+
     // Changing from passing: 'in' => [$array]
     // To simply: 'in' => $array
     // This may cause some problems so be on the look out for issues.
@@ -275,6 +321,98 @@ class Validators {
     }   
     public function matchMessage($input, $field) {
         $output = 'The ' . $field . ' field uses characters that are not allowed.';
+        return $output;
+    }
+
+    public function maxLength($input, $field) {
+        $args = func_get_args();
+        $input = $args[0];
+        $field = $args[1];
+        $length = $args[2];
+        $value = $input[$field] ?? '';
+
+        if(strlen($value) > $length) {
+            return false;
+        }
+
+        return true;                                                                                               
+    }   
+    public function maxLengthMessage($input, $field) {
+        $args = func_get_args();
+        $input = $args[0];
+        $field = $args[1];
+        $length = $args[2];
+
+        $output = 'The ' . $field . ' field cannot be longer than ' . pluralize($length, 'character') . '.';
+        return $output;
+    }
+
+    public function maxValue($input, $field) {
+        $args = func_get_args();
+        $input = $args[0];
+        $field = $args[1];
+        $max = $args[2];
+        $value = $input[$field] ?? 0;
+
+        if($value > $max) {
+            return false;
+        }
+
+        return true;                                                                                               
+    }   
+    public function maxValueMessage($input, $field) {
+        $args = func_get_args();
+        $input = $args[0];
+        $field = $args[1];
+        $max = $args[2];
+
+        $output = 'The ' . $field . ' field cannot be greater than ' . $max . '.';
+        return $output;
+    }
+
+    public function minLength($input, $field) {
+        $args = func_get_args();
+        $input = $args[0];
+        $field = $args[1];
+        $length = $args[2];
+        $value = $input[$field] ?? '';
+
+        if(strlen($value) < $length) {
+            return false;
+        }
+
+        return true;                                                                                               
+    }   
+    public function minLengthMessage($input, $field) {
+        $args = func_get_args();
+        $input = $args[0];
+        $field = $args[1];
+        $length = $args[2];
+
+        $output = 'The ' . $field . ' field cannot be shorter than ' . pluralize($length, 'character') . '.';
+        return $output;
+    }
+
+    public function minValue($input, $field) {
+        $args = func_get_args();
+        $input = $args[0];
+        $field = $args[1];
+        $min = $args[2];
+        $value = $input[$field] ?? 0;
+
+        if($value < $min) {
+            return false;
+        }
+
+        return true;                                                                                               
+    }   
+    public function minValueMessage($input, $field) {
+        $args = func_get_args();
+        $input = $args[0];
+        $field = $args[1];
+        $min = $args[2];
+
+        $output = 'The ' . $field . ' field cannot be less than ' . $min . '.';
         return $output;
     }
 

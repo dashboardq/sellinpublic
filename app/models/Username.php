@@ -15,7 +15,9 @@ class Username extends Model {
         // Add default domain if it is set and another domain is not set for the user.
         $user_domain = ao()->env('APP_USER_DOMAIN');
         if($user_domain && strpos($data['name'], '.') == false) {
-            $data['name'] = $data['name'] . $user_domain;
+            $data['username'] = $data['name'] . $user_domain;
+        } else {
+            $data['username'] = $data['name'];
         }
 
         return $data;

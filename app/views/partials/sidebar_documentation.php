@@ -7,7 +7,9 @@
                     <li><a href="/documentation/response">Response</a></li>
                     <li><a href="/documentation/sandbox">Sandbox</a></li>
                     <li><a href="/documentation/client">Client</a></li>
+<?php /*
                     <li><a href="/documentation/cli">CLI</a></li>
+ */ ?>
                     <li><a href="/documentation/changelog">Changelog</a></li>
                     <li>
                         <a href="/documentation/endpoints">Endpoints</a>

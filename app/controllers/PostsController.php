@@ -126,7 +126,15 @@ class PostsController {
 
         $posts = $response['data'];
 
-        return compact('posts');
+        try {
+            $response = APIService::call('/account', [], $req, $res);
+        } catch(Exception $e) {
+            $res->error($e->getMessage());
+        }
+
+        $delay = $response['data']['delay_post'];
+
+        return compact('delay', 'posts');
     }
 
     public function replySave($req, $res) {

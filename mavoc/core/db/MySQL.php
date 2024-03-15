@@ -56,6 +56,38 @@ class MySQL {
         return $sql;
     }
 
+    public static function alterTableModify($table, $args) {
+        $sql = '';
+
+        $field_count = 0;
+
+        $sql = '';
+        // TODO: Be careful. Do not use with user passed in data. Need to prepare the table passed in.
+        $sql .= 'ALTER TABLE `' . $table . '` ';
+        foreach($args as $key => $arg) {
+            if(is_string($arg)) {
+                if($field_count) {
+                    $sql .= ', ';
+                }
+                $sql .= 'MODIFY COLUMN ' . self::createType($key, $arg);
+
+                $field_count++;
+            } elseif(is_array($arg) && isset($arg['type'])) {
+                if($field_count) {
+                    $sql .= ', ';
+                }
+                $sql .= 'MODIFY COLUMN ' . self::createType($key, $arg['type'], $arg);
+                if(isset($arg['after'])) {
+                     $sql .= ' AFTER `' . $arg['after'] . '`';
+                }
+
+                $field_count++;
+            }
+        }
+
+        return $sql;
+    }
+
     public static function alterTableRename($table, $args) {
         $sql = '';
 
