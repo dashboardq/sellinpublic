@@ -19,6 +19,26 @@
                     <?php $res->html->messages(); ?>
                 </div>
 
+                <?php if(false): ?>
+                <div class="post">
+                    <div class="meta">
+                        <span class="profile">a</span> 
+                        <span class="name">Test</span> 
+                        @<a href="/test" class="username">test</a> 
+                        <a href="/test/1" class="published_at"><?php esc(elapsed(now())); ?></a> 
+                    </div>
+                    <p><?php echo \app\handlify(linkify(nl2br(_esc('This is a test post.')))); ?></p>
+
+                    <div class="attachment attachment_text shown">
+                        <button class="show">Show Additional Text</button>
+                        <button class="hide">Hide Additional Text</button>
+                        <p>This is some additional text.</p>
+                    </div>
+
+                    <?php $res->partial('post_actions', ['post' => ['replies' => 0, 'stars' => 0, 'replied' => false, 'id' => 1, 'username' => 'test', 'starred' => false, 'flagged' => false]]); ?>
+                </div>
+                <?php endif; ?>
+
                 <?php foreach($posts as $post): ?>
                 <div class="post">
                     <div class="meta">

@@ -1,5 +1,17 @@
 (function() {
 
+    function clickHide(e) {
+        var $el = e.target.closest('.shown');
+        $el.classList.remove('shown');
+        $el.classList.add('hidden');
+    }
+
+    function clickShow(e) {
+        var $el = e.target.closest('.hidden');
+        $el.classList.remove('hidden');
+        $el.classList.add('shown');
+    }
+
     function close(e) {
         var $el = e.target.closest('.show');
 
@@ -195,6 +207,9 @@
         ao.listen('click', 'a.star', postURL);
         ao.listen('click', 'a.unflag', postURL);
         ao.listen('click', 'a.unstar', postURL);
+
+        ao.listen('click', '.show', clickShow);
+        ao.listen('click', '.hide', clickHide);
 
         ao.listen('input', 'textarea', inputTextarea);
     }
