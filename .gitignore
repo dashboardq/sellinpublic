@@ -3,5 +3,7 @@
 .plug.php
 .Debug.php
 .Local.php
+.storage
 vendor
 public/local
+public/media

@@ -22,6 +22,7 @@
                             <li><a href="/documentation/endpoint/posts">Posts</a></li>
                             <li><a href="/documentation/endpoint/profile">Profile</a></li>
                             <li><a href="/documentation/endpoint/settings">Settings</a></li>
+                            <li><a href="/documentation/endpoint/uploads">Uploads</a></li>
                         </menu>
                     </li>
                 </menu>
@@ -45,6 +46,7 @@
                             <li><a href="/documentation/endpoint/posts#content">Posts</a></li>
                             <li><a href="/documentation/endpoint/profile#content">Profile</a></li>
                             <li><a href="/documentation/endpoint/settings#content">Settings</a></li>
+                            <li><a href="/documentation/endpoint/uploads#content">Uploads</a></li>
                         </menu>
                     </li>
                 </menu>

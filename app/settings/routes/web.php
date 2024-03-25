@@ -9,6 +9,7 @@ Route::get('about', ['MainController', 'about']);
 Route::get('pricing', ['MainController', 'pricing']);
 Route::get('terms', ['MainController', 'terms']);
 Route::get('privacy', ['MainController', 'privacy']);
+Route::get('test', ['MainController', 'test']);
 
 Route::get('documentation', ['DocumentationController', 'introduction']);
 Route::get('documentation/authentication', ['DocumentationController', 'authentication']);
@@ -38,6 +39,9 @@ Route::get('documentation/endpoint/settings', ['DocumentationController', 'setti
 Route::get('documentation/endpoint/settings/get', ['DocumentationController', 'settingsGet']);
 Route::get('documentation/endpoint/settings/timezones', ['DocumentationController', 'settingsTimezones']);
 Route::get('documentation/endpoint/settings/update', ['DocumentationController', 'settingsUpdate']);
+Route::get('documentation/endpoint/uploads', ['DocumentationController', 'uploads']);
+
+Route::get('documentation/download', ['DocumentationController', 'download']);
 
 
 // Private

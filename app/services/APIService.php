@@ -6,7 +6,9 @@ use app\controllers\APIAccountsController;
 use app\controllers\APINotificationsController;
 use app\controllers\APIPostsController;
 use app\controllers\APIReactionsController;
+use app\controllers\APIUploadsController;
 
+use app\models\Media;
 use app\models\Post;
 use app\models\User;
 
@@ -23,6 +25,29 @@ class APIService {
         $utc = new DateTimeZone('UTC');
 
         $output = [];
+
+        $parts = explode('/', trim($endpoint, '/'));
+        if(count($parts) > 3) {
+            $first_slug = '/' . $parts[0];
+            $second_slug = '/' . $parts[1];
+            $third_slug = '/' . $parts[2];
+            $fourth_slug = '/' . $parts[3];
+        } elseif(count($parts) > 2) {
+            $first_slug = '/' . $parts[0];
+            $second_slug = '/' . $parts[1];
+            $third_slug = '/' . $parts[2];
+            $fourth_slug = '';
+        } elseif(count($parts) > 1) {
+            $first_slug = '/' . $parts[0];
+            $second_slug = '/' . $parts[1];
+            $third_slug = '';
+            $fourth_slug = '';
+        } else {
+            $first_slug = $endpoint;
+            $second_slug = '';
+            $third_slug = '';
+            $fourth_slug = '';
+        }
         if(ao()->env('API_TYPE') == 'client') {
             $username = ao()->env('API_REMOTE_USERNAME');
             $key = ao()->env('API_REMOTE_KEY');
@@ -37,46 +62,14 @@ class APIService {
                 $page = '?page=' . $req->query['page'];
             }
             if(count($data)) {
+                if($first_slug . $third_slug == '/upload' . '/chunked') {
+                    $data['chunk'] = curl_file_create($_FILES['chunk']['tmp_name']);
+                }
                 $response = $rest->post($base_url . $version . $endpoint . $page, $data, [], 'array');
             } else {
                 $response = $rest->get($base_url . $version . $endpoint . $page, [], 'array');
             }
-
-            /*
-            if($endpoint == '/account') {
-                if(count($data)) {
-                    $response = $rest->post($base_url . $version . $endpoint, $data, [], 'array');
-                } else {
-                    $response = $rest->get($base_url . $version . $endpoint, [], 'array');
-                }
-            } elseif($endpoint == '/latest') {
-                $response = $rest->get($base_url . $version . $endpoint, [], 'array');
-            } elseif($endpoint == '/pending') {
-                $response = $rest->get($base_url . $version . $endpoint, [], 'array');
-            } elseif($endpoint == '/post') {
-                if(count($data)) {
-                    $response = $rest->post($base_url . $version . $endpoint, $data, [], 'array');
-                } else {
-                    //$response = $rest->get($base_url . $version . $endpoint, [], 'array');
-                }
-            }
-             */
-
         } else {
-            $parts = explode('/', trim($endpoint, '/'));
-            if(count($parts) > 2) {
-                $first_slug = '/' . $parts[0];
-                $second_slug = '/' . $parts[1];
-                $third_slug = '/' . $parts[2];
-            } elseif(count($parts) > 1) {
-                $first_slug = '/' . $parts[0];
-                $second_slug = '/' . $parts[1];
-                $third_slug = '';
-            } else {
-                $first_slug = $endpoint;
-                $second_slug = '';
-                $third_slug = '';
-            }
             if($endpoint == '/account') {
                 $controller = new APIAccountsController();
                 if(count($data)) {
@@ -95,6 +88,16 @@ class APIService {
             } elseif($endpoint == '/latest') {
                 $controller = new APIPostsController();
                 $response = $controller->latest($req, $res);
+            } elseif($endpoint == '/upload') {
+                $controller = new APIUploadsController();
+                // Create a fake request to pass the data.
+                $request = new Request();
+                $request->res = $res;
+                $request->type = 'api';
+                $request->data = $data;
+                $request->user = $req->user;
+                $request->user_id = $req->user_id;
+                $response = $controller->create($request, $res);
             } elseif($endpoint == '/notifications') {
                 $controller = new APINotificationsController();
                 $response = $controller->list($req, $res);
@@ -173,6 +176,28 @@ class APIService {
             } elseif($first_slug . $third_slug == '/post' . '/unstar') {
                 $controller = new APIReactionsController();
                 $response = $controller->unstar($req, $res);
+            } elseif($first_slug . $third_slug == '/upload' . '/chunked') {
+                $controller = new APIUploadsController();
+                // Create a fake request to pass the data.
+                $request = new Request();
+                $request->res = $res;
+                $request->params = $req->params;
+                $request->type = 'api';
+                $request->data = $data;
+                $request->user = $req->user;
+                $request->user_id = $req->user_id;
+                $response = $controller->chunked($request, $res);
+            } elseif($first_slug . $third_slug == '/upload' . '/completed') {
+                $controller = new APIUploadsController();
+                // Create a fake request to pass the data.
+                $request = new Request();
+                $request->res = $res;
+                $request->params = $req->params;
+                $request->type = 'api';
+                $request->data = $data;
+                $request->user = $req->user;
+                $request->user_id = $req->user_id;
+                $response = $controller->completed($request, $res);
             } else {
                 $response = self::error('The requested URL does not appear to be valid.');
             }
@@ -249,28 +274,78 @@ class APIService {
         return $response;
     }
 
-    public static function cleanNotification($notification) {
-        $initiator = [];
-        $initiator['display_name'] = $notification->data['initiator']['account']['display_name'];
-        $initiator['username'] = $notification->data['initiator']['account']['username']['name'];
-        $initiator['bio'] = $notification->data['initiator']['account']['bio'];
-        $notification->data['initiator'] = $initiator;
-
-        if($notification->data['initiator_post_id']) {
-            $initiator_post = Post::find($notification->data['initiator_post_id']);
-            $initiator_post = self::cleanPost($initiator_post);
-            $notification->data['initiator_post'] = $initiator_post->data;
+    public static function cleanAttachment($item) {
+        if(isset($item->data)) {
+            $temp = $item->data;
         } else {
-            $notification->data['initiator_post'] = [];
+            $temp = $item;
+        }
+        $output = [];
+        $output['id'] = $temp['id'];
+        $output['user_id'] = $temp['user_id'];
+        $output['post_id'] = $temp['post_id'];
+        $output['type'] = $temp['type'];
+        $output['content'] = $temp['content'];
+        $output['sort_order'] = $temp['sort_order'];
+        $output['created_at'] = $temp['created_at']->format('c');
+        $output['updated_at'] = $temp['updated_at']->format('c');
+        return $output;
+    }
+
+    public static function cleanMedia($item) {
+        if(isset($item->data)) {
+            $temp = $item->data;
+        } else {
+            $temp = $item;
         }
 
-        $receiver_post = Post::find($notification->data['receiver_post_id']);
-        $receiver_post = self::cleanPost($receiver_post);
-        $notification->data['receiver_post'] = $receiver_post->data;
+        $output = [];
+        $output['id'] = $temp['id'];
+        $output['user_id'] = $temp['user_id'];
+        $output['url_location'] = $temp['url_location'];
+        $output['type'] = $temp['type'];
+        return $output;
+    }
 
-        unset($notification->data['created_tz']);
-        unset($notification->data['updated_tz']);
-        return $notification;
+    public static function cleanNotification($item) {
+        if(isset($item->data)) {
+            $temp = $item->data;
+        } else {
+            $temp = $item;
+        }
+
+        $output = [];
+        $output['id'] = $temp['id'];
+        $output['receiver_id'] = $temp['receiver_id'];
+        $output['receiver_post_id'] = $temp['receiver_post_id'];
+        $output['initiator_id'] = $temp['initiator_id'];
+        $output['initiator_post_id'] = $temp['initiator_post_id'];
+        $output['type'] = $temp['type'];
+        $output['status'] = $temp['status'];
+        $output['content'] = $temp['content'];
+        $output['created_at'] = $temp['created_at']->format('c');
+        $output['updated_at'] = $temp['updated_at']->format('c');
+
+        $initiator = [];
+        $initiator['display_name'] = $temp['initiator']['account']['display_name'];
+        $initiator['username'] = $temp['initiator']['account']['username']['name'];
+        $initiator['bio'] = $temp['initiator']['account']['bio'];
+        $initiator['profile_image_url'] = $temp['initiator']['account']['profile_image_url'];
+        $output['initiator'] = $initiator;
+
+        if($item->data['initiator_post_id']) {
+            $initiator_post = Post::find($temp['initiator_post_id']);
+            $initiator_post = self::cleanPost($initiator_post);
+            $output['initiator_post'] = $initiator_post;
+        } else {
+            $output['initiator_post'] = [];
+        }
+
+        $receiver_post = Post::find($temp['receiver_post_id']);
+        $receiver_post = self::cleanPost($receiver_post);
+        $output['receiver_post'] = $receiver_post;
+
+		return $output;
     }
 
     public static function cleanNotifications($notifications) {
@@ -280,44 +355,85 @@ class APIService {
         return $notifications;
     }
 
-    public static function cleanPost($post) {
-        $post->data['display_name'] = $post->data['user']['account']['display_name'];
-        $post->data['username'] = $post->data['user']['account']['username']['username'];
-        $post->data['bio'] = $post->data['user']['account']['bio'];
-        unset($post->data['user']);
-        unset($post->data['created_tz']);
-        unset($post->data['updated_tz']);
-        unset($post->data['published_tz']);
-        return $post;
+    public static function cleanPost($item) {
+        if(isset($item->data)) {
+            $temp = $item->data;
+        } else {
+            $temp = $item;
+        }
+
+        $output = [];
+        $output['id'] = $temp['id'];
+        $output['user_id'] = $temp['user_id'];
+        $output['conversation_id'] = $temp['conversation_id'];
+        $output['parent_id'] = $temp['parent_id'];
+        $output['original_id'] = $temp['original_id'];
+        $output['post'] = $temp['post'];
+        $output['status'] = $temp['status'];
+        $output['type'] = $temp['type'];
+        $output['depth'] = $temp['depth'];
+        $output['sort_order'] = $temp['sort_order'];
+        $output['attachment_count'] = $temp['attachment_count'];
+        $output['replies'] = $temp['replies'];
+        $output['reposts'] = $temp['reposts'];
+        $output['quotes'] = $temp['quotes'];
+        $output['stars'] = $temp['stars'];
+        $output['flags'] = $temp['flags'];
+        $output['reactions'] = $temp['reactions'];
+        $output['bumps'] = $temp['bumps'];
+        $output['created_at'] = $temp['created_at']->format('c');
+        $output['updated_at'] = $temp['updated_at']->format('c');
+        $output['published_at'] = $temp['published_at']->format('c');
+        $output['sorted_at'] = $temp['sorted_at']->format('c');
+        $output['username'] = $temp['username'];
+        $output['replied'] = $temp['replied'];
+        $output['flagged'] = $temp['flagged'];
+        $output['starred'] = $temp['starred'];
+
+        $attachments = [];
+        foreach($temp['attachments'] as $attachment) {
+            $attachments[] = self::cleanAttachment($attachment);
+        }
+        $output['attachments'] = $attachments;
+
+        $user = self::cleanUser($temp['user']);
+        $output['user'] = $user;
+
+        return $output;
     }
 
     public static function cleanPosts($posts) {
         foreach($posts as $i => $post) {
             $posts[$i] = self::cleanPost($post);
-
-            /*
-            $posts[$i]->data['display_name'] = $post->data['user']['account']['display_name'];
-            $posts[$i]->data['username'] = $post->data['user']['account']['username']['name'];
-            $posts[$i]->data['bio'] = $post->data['user']['account']['bio'];
-            unset($posts[$i]->data['user']);
-            unset($posts[$i]->data['created_tz']);
-            unset($posts[$i]->data['updated_tz']);
-            unset($posts[$i]->data['published_tz']);
-             */
         }
         return $posts;
     }
 
-    public static function cleanReaction($reaction) {
-        $post = Post::find($reaction->data['post_id']);
+    public static function cleanReaction($item) {
+        if(isset($item->data)) {
+            $temp = $item->data;
+        } else {
+            $temp = $item;
+        }
+
+        $output = [];
+        $output['id'] = $temp['id'];
+        $output['user_id'] = $temp['user_id'];
+        $output['post_id'] = $temp['post_id'];
+        $output['type'] = $temp['type'];
+        $output['content'] = $temp['content'];
+        $output['created_at'] = $temp['created_at']->format('c');
+        $output['updated_at'] = $temp['updated_at']->format('c');
+
+        $post = Post::find($temp['post_id']);
         $post = self::cleanPost($post);
-        $reaction->data['post'] = $post->data;
+        $output['post'] = $post;
 
-        $user = User::find($reaction->data['user_id']);
+        $user = User::find($temp['user_id']);
         $user = self::cleanUser($user);
-        $reaction->data['user'] = $user->data;
+        $output['user'] = $user;
 
-        return $reaction;
+        return $output;
     }
 
     public static function cleanReactions($reactions) {
@@ -327,13 +443,43 @@ class APIService {
         return $reactions;
     }
 
-    public static function cleanUser($user) {
-        $output = new \stdClass();
-        $output->data = [];
-        $output->data['user_id'] = $user->id;
-        $output->data['username'] = $user->data['account']['username']['name'];
-        $output->data['display_name'] = $user->data['account']['display_name'];
-        $output->data['bio'] = $user->data['account']['bio'];
+    public static function cleanUpload($item) {
+        if(isset($item->data)) {
+            $temp = $item->data;
+        } else {
+            $temp = $item;
+        }
+
+        $output = [];
+        $output['id'] = $temp['id'];
+        $output['user_id'] = $temp['user_id'];
+        $output['status'] = $temp['status'];
+        $output['expired_at'] = $temp['expired_at']->format('c');
+        if(in_array($temp['upload_type'], ['profile'])) {
+            $output['media'] = [];
+            $media = Media::where('upload_id', $item->id);
+            foreach($media as $med) {
+                $output['media'][] = self::cleanMedia($med);
+            }
+        } else {
+            $output['media'] = [];
+        }
+        return $output;
+    }
+
+    public static function cleanUser($item) {
+        if(isset($item->data)) {
+            $temp = $item->data;
+        } else {
+            $temp = $item;
+        }
+
+        $output = [];
+        $output['user_id'] = $temp['id'];
+        $output['username'] = $temp['account']['username']['username'];
+        $output['display_name'] = $temp['account']['display_name'];
+        $output['bio'] = $temp['account']['bio'];
+        $output['profile_image_url'] = $temp['account']['profile_image_url'];
 
         return $output;
     }

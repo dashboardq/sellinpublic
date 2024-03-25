@@ -27,7 +27,7 @@ class MySQL {
                 }
                 $sql .= 'ADD COLUMN ' . self::createType($key, $arg['type'], $arg);
                 if(isset($arg['after'])) {
-                     $sql .= ' AFTER `' . $arg['after'] . '`';
+                    $sql .= ' AFTER `' . $arg['after'] . '`';
                 }
 
                 $field_count++;
@@ -78,7 +78,7 @@ class MySQL {
                 }
                 $sql .= 'MODIFY COLUMN ' . self::createType($key, $arg['type'], $arg);
                 if(isset($arg['after'])) {
-                     $sql .= ' AFTER `' . $arg['after'] . '`';
+                    $sql .= ' AFTER `' . $arg['after'] . '`';
                 }
 
                 $field_count++;
@@ -157,7 +157,7 @@ class MySQL {
         if($type == 'id') {
             $sql .= '`' . $key . '` bigint unsigned NOT NULL ';
             if(isset($extras['primary'])) {
-                    $sql .= ' AUTO_INCREMENT ';
+                $sql .= ' AUTO_INCREMENT ';
             } else {
                 if(isset($extras['default'])) {
                     $sql .= "DEFAULT '" . $extras['default'] . "' ";

@@ -7,7 +7,7 @@ use mavoc\core\Model;
 
 class APIKey extends Model {
     public static $table = 'api_keys';
-    public static $private = ['key'];
+    public static $private = ['api_key'];
 
     public static function create($args) {
         $prefix = ao()->env('API_PREFIX');

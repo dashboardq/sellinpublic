@@ -315,7 +315,7 @@ class Mavoc {
                 echo json_encode($output);
                 exit;
             }
-        } catch(\Exception $e) {
+        } catch(\Throwable $e) {
             if(isset($this->request->last_url)) {
                 $redirect = $this->request->last_url;
             } else {

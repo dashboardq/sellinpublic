@@ -2,7 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\Account;
 use app\models\APIKey;
+use app\models\Media;
 use app\models\Notification;
 use app\models\Post;
 use app\models\Reaction;
@@ -10,6 +12,7 @@ use app\models\Setting;
 use app\models\Timeline;
 use app\models\User;
 use app\models\Username;
+use app\models\Upload;
 
 use DateTime;
 
@@ -108,20 +111,61 @@ class ConsoleController {
             $tables[] = 'accounts';
             $tables[] = 'api_keys';
             $tables[] = 'attachments';
+            $tables[] = 'media';
             $tables[] = 'notifications';
             $tables[] = 'password_resets';
             $tables[] = 'posts';
             $tables[] = 'reactions';
+            $tables[] = 'refresh_logins';
             $tables[] = 'restrictions';
             $tables[] = 'settings';
             $tables[] = 'subscriptions';
             $tables[] = 'timelines';
             $tables[] = 'usernames';
             $tables[] = 'users';
+            $tables[] = 'uploads';
 
             foreach($tables as $table) {
                 $out->write('Truncate ' . $table, 'green');
                 ao()->db->query(ao()->db->truncateTable($table));
+            }
+
+            // Delete uploads
+            $location = ao()->env('AO_STORAGE_DIR') . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . '*';
+            $files = glob($location);
+            foreach($files as $file) { 
+                if(substr($file, -8) != 'alphabet' && substr($file, -4) != 'demo') {
+                    $out->write('Delete ' . $file, 'green');
+                    if(is_dir($file)) {
+                        rmdirForce($file);
+                    } else {
+                        unlink($file); 
+                    }
+                }
+            }
+
+            // Copy demo file
+            $src_dir = ao()->env('AO_BASE_DIR') . DIRECTORY_SEPARATOR . '.example.storage' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'demo';
+            $src_file = $src_dir . DIRECTORY_SEPARATOR . 'g.png';
+            $dest_dir = ao()->env('AO_STORAGE_DIR') . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . '100';
+            $dest_file = $dest_dir . DIRECTORY_SEPARATOR . 'profile_1.png';
+
+            mkdir($dest_dir, ao()->env('AO_CHMOD_DIR'), true);
+            copy($src_file, $dest_file);
+
+            // The mkdir chmod does not appear to be working so calling chmod directly.
+            chmod($dest_dir, ao()->env('AO_CHMOD_DIR'));
+            chmod($dest_file, ao()->env('AO_CHMOD_FILE'));
+            $user = ao()->env('AO_CHOWN');
+            $group = ao()->env('AO_CHGRP');
+            if($user) {
+                $out->write($dest_dir, 'green');
+                chown($dest_dir, $user);
+                chown($dest_file, $user);
+            }
+            if($group) {
+                chgrp($dest_dir, $group);
+                chgrp($dest_file, $group);
             }
 
             // Create the users
@@ -146,6 +190,35 @@ class ConsoleController {
                 $args['primary'] = 1;
                 Username::create($args); 
             }
+
+            $out->write('Create profile image for good user', 'green');
+            $args = [];
+            $args['user_id'] = 3;
+            $args['name'] = 'profile1.png';
+            $args['extension'] = '.png';
+            $args['file_location'] = $dest_file;
+            $args['total_bytes'] = 12429;
+            $args['current_bytes'] = 12429;
+            $args['total_chunks'] = 1;
+            $args['current_chunks'] = 1;
+            $args['file_type'] = 'image';
+            $args['upload_type'] = 'profile';
+            $args['original_name'] = 'g.png';
+            $args['original_extension'] = '.png';
+            $args['status'] = 'completed';
+            Upload::create($args);
+
+            $args = [];
+            $args['user_id'] = 3;
+            $args['file_location'] = $dest_file;
+            $args['url_location'] = ao()->env('APP_SITE') . '/media/100/profile_1.png';
+            $args['type'] = 'profile';
+            Media::create($args);
+
+            // Update the media_id.
+            $account = Account::find(3);
+            $account->data['media_id'] = 1;
+            $account->save();
 
             $out->write('Create API Keys', 'green');
             // Creat API Keys for demo

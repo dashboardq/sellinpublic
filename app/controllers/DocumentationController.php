@@ -12,6 +12,15 @@ class DocumentationController {
         return [];
     }
 
+    public function download($req, $res) {
+        $file = ao()->env('AO_STORAGE_DIR') . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR . 'd.png';
+        header('Content-Type: image/png');
+        header("Content-Transfer-Encoding: Binary"); 
+        header('Content-disposition: attachment; filename="demo.png"'); 
+        readfile($file); 
+        exit;
+    }
+
     public function request($req, $res) {
         return [];
     }
@@ -113,6 +122,10 @@ class DocumentationController {
     }
 
     public function settingsUpdate($req, $res) {
+        return [];
+    }
+
+    public function uploads($req, $res) {
         return [];
     }
 }

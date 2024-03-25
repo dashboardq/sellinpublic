@@ -11,16 +11,7 @@
                 <?php $res->html->messages(); ?>
 
                 <div class="depth depth_0">
-                    <div class="post">
-                        <div class="meta">
-                            <span class="profile"><?php esc(substr($post['username'], 0, 1)); ?></span> 
-                            <span class="name"><?php esc($post['display_name']); ?></span> 
-                            @<a href="/<?php esc($post['username']); ?>" class="username"><?php esc($post['username']); ?></a> 
-                            <a href="/<?php esc($post['username']); ?>/<?php esc($post['id']); ?>" class="published_at"><?php esc(elapsed($post['published_tz'])); ?></a> 
-                        </div>
-                        <p><?php echo nl2br(_esc($post['post'])); ?></p>
-                        <?php $res->partial('post_actions', compact('post')); ?>
-                    </div>
+                    <?php $res->partial('post', ['post' => $post]); ?>
                 </div>
 
                 <?php if(count($reactions) == 0): ?>

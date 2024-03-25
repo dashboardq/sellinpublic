@@ -31,30 +31,25 @@ class PostsController {
     }
 
     public function create($req, $res) {
-        /*
-        $val = $req->val($req->data, [
-            'post' => ['required'],
-            'content' => ['optional'],
-        ]);
+        $rules = [];
+        $rules['post'] = ['required', ['maxLength' => 240]];
+        $rules['attachment_count'] = ['required', 'integer'];
 
-        $username = Username::primary($req->user_id);
-        $published_at = new DateTime();
-        $published_at->modify('+48 hours');
+        $pass1 = $req->val('data', $rules);
 
-        $val['user_id'] = $req->user_id;
-        $val['username_id'] = $username->id;
-        $val['status'] = 'pending';
-        $val['published_at'] = $published_at;
+        for($i = 0; $i < $pass1['attachment_count']; $i++) {
+            $rules['attachment_type_' . $i] = ['required', ['in' => ['text']]];
+        }
 
-        $post = Post::create($val);
+        $pass2 = $req->val('data', $rules);
 
-        $res->success('Thank you for submitting your post. It will be publicly displayed in 48 hours. New accounts have a delay in publishing to help protect against spam.', '/pending');
-        */
+        for($i = 0; $i < $pass1['attachment_count']; $i++) {
+            if($pass2['attachment_type_' . $i] == 'text') {
+                $rules['attachment_text_' . $i] = ['required'];
+            }
+        }
 
-        $data = $req->val('data', [
-            'post' => ['required'],
-            'content' => ['optional'],
-        ]);
+        $data = $req->val('data', $rules);
 
         try {
             $response = APIService::call('/post', $data, $req, $res);
@@ -143,6 +138,25 @@ class PostsController {
             'content' => ['optional'],
         ]);
 
+        $rules = [];
+        $rules['post'] = ['required'];
+        $rules['attachment_count'] = ['required', 'integer'];
+
+        $pass1 = $req->val('data', $rules);
+
+        for($i = 0; $i < $pass1['attachment_count']; $i++) {
+            $rules['attachment_type_' . $i] = ['required', ['in' => ['text']]];
+        }
+
+        $pass2 = $req->val('data', $rules);
+
+        for($i = 0; $i < $pass1['attachment_count']; $i++) {
+            if($pass2['attachment_type_' . $i] == 'text') {
+                $rules['attachment_text_' . $i] = ['required'];
+            }
+        }
+
+        $data = $req->val('data', $rules);
         $data['parent_id'] = $req->params['post_id'];
 
         try {

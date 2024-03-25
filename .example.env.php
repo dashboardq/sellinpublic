@@ -62,10 +62,16 @@ return [
     'AO_PLUGIN_DIR' => __DIR__ . DIRECTORY_SEPARATOR . 'plugins',
     'AO_PUBLIC_DIR' => __DIR__ . DIRECTORY_SEPARATOR . 'public',
     'AO_SETTINGS_DIR' => __DIR__ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'settings',
-    'AO_STORAGE_DIR' => __DIR__ . DIRECTORY_SEPARATOR . 'storage',
+    'AO_STORAGE_DIR' => __DIR__ . DIRECTORY_SEPARATOR . '.storage',
     'AO_MAVOC_DIR' => __DIR__ . DIRECTORY_SEPARATOR . 'mavoc',
     'AO_MAVOC_CONSOLE_DIR' => __DIR__ . DIRECTORY_SEPARATOR . 'mavoc' . DIRECTORY_SEPARATOR . 'console',
     'AO_MAVOC_CORE_DIR' => __DIR__ . DIRECTORY_SEPARATOR . 'mavoc' . DIRECTORY_SEPARATOR . 'core',
+
+    // Set the permissions (used in script automations like: php ao process)
+    'AO_CHOWN' => '', // Your username
+    'AO_CHGRP' => '', // Your group (like www-data)
+    'AO_CHMOD_FILE' => 0664,
+    'AO_CHMOD_DIR' => 0775,
 
     'AO_OUTPUT_HOOKS' => false,
 

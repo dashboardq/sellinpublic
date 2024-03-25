@@ -42,8 +42,9 @@ class AccountsController {
         $res->fields['username'] = $response['data']['username'];
         $res->fields['display_name'] = $response['data']['display_name'];
         $res->fields['bio'] = $response['data']['bio'];
+        $res->fields['media_id'] = $response['data']['media_id'];
 
-        return [];
+        return ['profile_image_url' => $response['data']['profile_image_url']];
     }
 
     public function update($req, $res) {
@@ -52,11 +53,13 @@ class AccountsController {
                 'email' => ['required', 'email', ['dbUnique' => ['users', 'id', $req->user_id]]],
                 'name' => ['required'],
                 'display_name' => ['required'],
-                'bio' => ['optional'],
+                'media_id' => ['required', 'integer'],
+                'bio' => ['optional', ['maxLength' => 240]],
             ]);
 
             $args = [];
             $args['display_name'] = $data['display_name'];
+            $args['media_id'] = $data['media_id'];
             if(isset($data['bio'])) {
                 $args['bio'] = $data['bio'];
             }
@@ -69,7 +72,8 @@ class AccountsController {
         } else {
             $data = $req->val('data', [
                 'display_name' => ['required'],
-                'bio' => ['optional'],
+                'media_id' => ['required', 'integer'],
+                'bio' => ['optional', ['maxLength' => 240]],
             ]);
 
             APIService::call('/account', $data, $req, $res);

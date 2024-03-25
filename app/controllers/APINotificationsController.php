@@ -51,7 +51,7 @@ class APINotificationsController {
         $output['status'] = 'success';
         $output['messages'] = [];
         $output['meta'] = ['pagination' => $pagination];
-        $output['data'] = data($notifications);
+        $output['data'] = $notifications;
         return $output;
     }
 

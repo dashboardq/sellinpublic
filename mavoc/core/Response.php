@@ -295,6 +295,22 @@ class Response {
             if(!isset($args['req'])) {
                 $args['req'] = $this->req;
             }
+            if(!isset($args['fields'])) {
+                $args['fields'] = [];
+
+                foreach($this->fields as $key => $value) {
+                    $args['fields'][$key] = $value;
+                }
+
+                // Flash fields should take priority over response fields 
+                // (flash fields are typically set after a submission while response fields are typically set
+                // in the controller)
+                if(isset($this->session->flash['fields'])) {
+                    foreach($this->session->flash['fields'] as $key => $value) {
+                        $args['fields'][$key] = $value;
+                    }
+                }
+            }
             if(!isset($args['title'])) {
                 $default_title = ao()->env('APP_NAME');
                 $default_title = ao()->hook('ao_response_default_title', $default_title);

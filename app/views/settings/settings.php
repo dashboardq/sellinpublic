@@ -26,4 +26,3 @@
 		<?php $res->partial('foot'); ?>
     </body>
 </html>
-

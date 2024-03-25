@@ -32,9 +32,11 @@
   "data": {
     "user_id": 1,
     "username": "demo",
+    "media_id": 0,
+    "profile_image_url": "https://sandbox.sellinpublic.com/media/alphabet/d.png",
     "display_name": "Demo",
     "bio": "",
-    "delay_post": "15 minutes",
+    "delay_post": "2 minutes",
     "timezone": "UTC"
   }
 }
@@ -44,10 +46,12 @@
 					<h3>POST /account</h3>
 					<p>Private endpoint. Updates the account with the information provided.</p>
                     <h4>Request body</h4>
-                    <p><strong>display_name</strong>: string<br>
-                    The name that is display publicly on the user profile page and with each post.</p>
                     <p><strong>bio</strong>: string<br>
                     The text info that is displayed on the user's profile.</p>
+                    <p><strong>display_name</strong>: string<br>
+                    The name that is display publicly on the user profile page and with each post.</p>
+                    <p><strong>media_id</strong>: integer<br>
+                    To use the default image, send 0. To use a custom profile image, submit the media id the was returned when uploading an image.</p>
 
                     <h4>Endpoint Example</h4>
 					<p>Below is a live example that can be copy and pasted.</p>
@@ -66,9 +70,11 @@
   "data": {
     "user_id": 1,
     "username": "demo",
+    "media_id": 0,
+    "profile_image_url": "https://sandbox.sellinpublic.com/media/alphabet/d.png",
     "display_name": "Demo Updated",
     "bio": "",
-    "delay_post": "15 minutes",
+    "delay_post": "2 minutes",
     "timezone": "UTC"
   }
 }

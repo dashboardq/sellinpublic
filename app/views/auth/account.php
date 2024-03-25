@@ -12,8 +12,8 @@
                 <div class="page">
                     <h2>Account</h2>
 
+                    <?php $res->html->messages(); ?>
                     <?php if(ao()->env('APP_LOGIN_TYPE') == 'db'): ?>
-                        <?php $res->html->messages(); ?>
                         <form method="POST">
                             <?php $res->html->text('Username', 'username', '', '', 'disabled'); ?>
 

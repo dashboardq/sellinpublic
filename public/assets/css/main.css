@@ -60,6 +60,24 @@ main .pagination {
     width: 46px;
     height: 46px;
     text-align: center;
+    background: transparent;
+}
+.meta .profile img {
+    border-radius: 50%;
+}
+.page_account .profile {
+    margin-bottom: 1rem;
+}
+.page_account .profile img {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+.page_account .profile .file {
+    opacity: 0;
+    width: 0;    
+    height: 0;    
 }
 .meta .name {
     font-weight: bold;
@@ -451,8 +469,19 @@ main > .notice {
 .attachment_text.hidden button.hide {
     display: none;
 }
-
 /* EOF: Attachments */
+
+/* BOF: Attachments Create */
+form .attachment {
+    border-top: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+    margin: 1rem 0;
+    padding: 1rem 0;
+}
+.attachment_type_text textarea {
+    height: 280px;
+}
+/* EOF: Attachments Create */
 
 @media (min-width: 1200px) {
     .page_documentation #sidebar_left menu.desktop {

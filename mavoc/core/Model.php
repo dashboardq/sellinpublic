@@ -377,7 +377,7 @@ class Model {
 
         $class = get_called_class();
         $quote = ao()->db->quote;
-		$table = self::setTable($class);
+        $table = self::setTable($class);
         $limit = self::setLimit($return_type, $table);
         $page = self::setPage($return_type, $table);
         $offset = self::setOffset($return_type, $table);
@@ -511,7 +511,7 @@ class Model {
     // TODO: Should there be a non-static version of this method?
     public static function delete($id) {
         $class = get_called_class();
-		$table = self::setTable($class);
+        $table = self::setTable($class);
         if($table) {
             if(is_array($id)) {
                 $first = true;
@@ -537,7 +537,7 @@ class Model {
     // TODO: Need to cache the results so that dynamic values aren't constantly being created.
     public static function find($id, $return_type = 'default') {
         $class = get_called_class();
-		$table = self::setTable($class);
+        $table = self::setTable($class);
         $item = null;
         $output = null;
         if($table) {
@@ -614,6 +614,17 @@ class Model {
         }
 
         return $output;
+    }
+
+    // Reload if an id has been set.
+    public function reload() {
+        if($this->id) {
+            // Reload the all, raw, and data
+            $item = self::find($this->id);
+            $this->all = $item->all;
+            $this->raw = $item->raw;
+            $this->data = $item->data;
+        }
     }
 
     public function save() {

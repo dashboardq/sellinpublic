@@ -38,7 +38,8 @@
     "user_id": 2,
     "username": "sandbox",
     "display_name": "Sandbox",
-    "bio": ""
+    "bio": "",
+    "profile_image_url": "https://sandbox.sellinpublic.com/media/alphabet/s.png"
   }
 }
 </pre>

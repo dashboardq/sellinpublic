@@ -19,16 +19,7 @@
 
                 <?php foreach($reactions as $reaction): ?>
                 <div class="depth depth_0">
-                    <div class="post">
-                        <div class="meta">
-                            <span class="profile"><?php esc(substr($reaction['post']['username'], 0, 1)); ?></span> 
-                            <span class="name"><?php esc($reaction['post']['display_name']); ?></span> 
-                            @<a href="/<?php esc($reaction['post']['username']); ?>" class="username"><?php esc($reaction['post']['username']); ?></a> 
-                            <a href="/<?php esc($reaction['post']['username']); ?>/<?php esc($reaction['post']['id']); ?>" class="published_at"><?php esc(elapsed($reaction['post']['published_tz'])); ?></a> 
-                        </div>
-                        <p><?php echo nl2br(_esc($reaction['post']['post'])); ?></p>
-                        <?php $res->partial('post_actions', ['post' => $reaction['post']]); ?>
-                    </div>
+                    <?php $res->partial('post', ['post' => $reaction['post']]); ?>
                 </div>
                 <?php endforeach; ?>
 

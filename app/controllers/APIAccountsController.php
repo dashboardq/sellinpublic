@@ -23,6 +23,8 @@ class APIAccountsController {
         $output = [];
         $output['user_id'] = $usernames[0]->data['user_id'];
         $output['username'] = $usernames[0]->data['username'];
+        $output['media_id'] = $req->user->data['account']['media_id'];
+        $output['profile_image_url'] = $req->user->data['account']['profile_image_url'];
         $output['display_name'] = $req->user->data['account']['display_name'];
         $output['bio'] = $req->user->data['account']['bio'];
         $output['delay_post'] = pluralize($settings['delay_post'], 'minute');
@@ -57,6 +59,7 @@ class APIAccountsController {
         $output['username'] = $username->data['username'];
         $output['display_name'] = $user->data['account']['display_name'];
         $output['bio'] = $user->data['account']['bio'];
+        $output['profile_image_url'] = $user->data['account']['profile_image_url'];
 
         return APIService::data($output);
     }
@@ -67,6 +70,7 @@ class APIAccountsController {
                 'email' => ['optional', 'email', ['dbUnique' => ['users', 'id', $req->user_id]]],
                 'name' => ['optional'],
                 'display_name' => ['optional'],
+                'media_id' => ['optional', 'integer'],
                 'bio' => ['optional'],
             ]);
 
@@ -85,6 +89,9 @@ class APIAccountsController {
             if(isset($data['display_name'])) {
                 $args['display_name'] = $data['display_name'];
             }
+            if(isset($data['media_id'])) {
+                $args['media_id'] = $data['media_id'];
+            }
             if(isset($data['bio'])) {
                 $args['bio'] = $data['bio'];
             }
@@ -95,12 +102,16 @@ class APIAccountsController {
         } else {
             $data = $req->val('data', [
                 'display_name' => ['optional'],
+                'media_id' => ['optional', 'integer'],
                 'bio' => ['optional'],
             ]);
 
             $args = [];
             if(isset($data['display_name'])) {
                 $args['display_name'] = $data['display_name'];
+            }
+            if(isset($data['media_id'])) {
+                $args['media_id'] = $data['media_id'];
             }
             if(isset($data['bio'])) {
                 $args['bio'] = $data['bio'];
@@ -115,8 +126,10 @@ class APIAccountsController {
         $settings = Setting::get($req->user_id); 
 
         $output = [];
-        $output['user_id'] = $user->id;
+        $output['user_id'] = $user->data['id'];
         $output['username'] = $user->data['account']['username']['username'];
+        $output['media_id'] = $user->data['account']['media_id'];
+        $output['profile_image_url'] = $user->data['account']['profile_image_url'];
         $output['display_name'] = $user->data['account']['display_name'];
         $output['bio'] = $user->data['account']['bio'];
         $output['delay_post'] = pluralize($settings['delay_post'], 'minute');

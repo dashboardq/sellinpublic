@@ -180,6 +180,7 @@ class HTML {
             $name = underscorify($label);
         }
 
+        // We want session flash fields to take priority over prefilled fields created in the controller.
         if(isset($this->session->flash['fields'][$name])) {
             $value = $this->session->flash['fields'][$name];
         } elseif(isset($this->res->fields[$name])) {
@@ -241,7 +242,8 @@ class HTML {
         echo $output;
     }
 
-    public function _hidden($name, $value) {
+    public function _hidden($name, $value = '') {
+        // We want session flash fields to take priority over prefilled fields created in the controller.
         if(isset($this->session->flash['fields'][$name])) {
             $value = $this->session->flash['fields'][$name];
         } elseif(isset($this->res->fields[$name])) {
@@ -255,7 +257,7 @@ class HTML {
 
         return $output;
     }
-    public function hidden($name, $value) {
+    public function hidden($name, $value = '') {
         $output = $this->_hidden($name, $value);
         echo $output;
     }
@@ -341,6 +343,7 @@ class HTML {
         }
 
         $selected = '';
+        // We want session flash fields to take priority over prefilled fields created in the controller.
         if(
             isset($this->session->flash['fields'][$name]) 
             && $value == $this->session->flash['fields'][$name]
@@ -449,6 +452,7 @@ class HTML {
         }
 
         $checked = '';
+        // We want session flash fields to take priority over prefilled fields created in the controller.
         if(
             isset($this->session->flash['fields'][$name]) 
             && $value == $this->session->flash['fields'][$name]
@@ -488,6 +492,7 @@ class HTML {
         }
 
         $checked = '';
+        // We want session flash fields to take priority over prefilled fields created in the controller.
         if(
             isset($this->session->flash['fields'][$name]) 
             && $value == $this->session->flash['fields'][$name]
@@ -563,6 +568,7 @@ class HTML {
             $name = underscorify($label);
         }
 
+        // We want session flash fields to take priority over prefilled fields created in the controller.
         if(isset($this->session->flash['fields'][$name])) {
             $current_value = $this->session->flash['fields'][$name];
         } elseif(isset($this->res->fields[$name])) {
@@ -667,6 +673,7 @@ class HTML {
             $name = underscorify($label);
         }
 
+        // We want session flash fields to take priority over prefilled fields created in the controller.
         if(isset($this->session->flash['fields'][$name])) {
             $value = $this->session->flash['fields'][$name];
         } elseif(isset($this->res->fields[$name])) {
@@ -710,6 +717,7 @@ class HTML {
             $name = underscorify($label);
         }
 
+        // We want session flash fields to take priority over prefilled fields created in the controller.
         if(isset($this->session->flash['fields'][$name])) {
             $value = $this->session->flash['fields'][$name];
         } elseif(isset($this->res->fields[$name])) {
@@ -744,6 +752,7 @@ class HTML {
             $name = underscorify($label);
         }
 
+        // We want session flash fields to take priority over prefilled fields created in the controller.
         if(isset($this->session->flash['fields'][$name])) {
             $value = $this->session->flash['fields'][$name];
         } elseif(isset($this->res->fields[$name])) {
@@ -791,6 +800,7 @@ class HTML {
             $name = underscorify($label);
         }
 
+        // We want session flash fields to take priority over prefilled fields created in the controller.
         if(isset($this->session->flash['fields'][$name])) {
             $value = $this->session->flash['fields'][$name];
         } elseif(isset($this->res->fields[$name])) {

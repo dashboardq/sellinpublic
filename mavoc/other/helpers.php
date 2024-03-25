@@ -152,6 +152,7 @@ if(!function_exists('data')) {
                 $output[$i] = simplify($item->data);
             }
         } else {
+            $output = simplify($input->data);
         }
         return $output;
     }   
@@ -494,9 +495,13 @@ if(!function_exists('methodify')) {
 }
 
 if(!function_exists('now')) {
-    function now() {
+    function now($return_datetime = false) {
         $dt = new \DateTime();
-        return $dt->format('Y-m-d H:i:s');
+        if($return_datetime) {
+            return $dt;
+        } else {
+            return $dt->format('Y-m-d H:i:s');
+        }
     }
 }
 
@@ -582,6 +587,31 @@ if(!function_exists('returnFalse')) {
 if(!function_exists('returnTrue')) {
     function returnTrue() {   
         return true;
+    }   
+}
+
+if(!function_exists('rmdirForce')) {
+    // Based on https://stackoverflow.com/questions/1653771/how-do-i-remove-a-directory-that-is-not-empty
+    function rmdirForce($dir) {   
+        if(!file_exists($dir)) {
+            return true;
+        }
+
+        if(!is_dir($dir)) {
+            return unlink($dir);
+        }
+
+        foreach(scandir($dir) as $item) {
+            if($item == '.' || $item == '..') {
+                continue;
+            }
+
+            if(!rmdirForce($dir . DIRECTORY_SEPARATOR . $item)) {
+                return false;
+            }
+        }
+
+        return rmdir($dir);
     }   
 }
 

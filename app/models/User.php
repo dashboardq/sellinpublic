@@ -39,6 +39,7 @@ class User extends Model {
         if(!$item->data['account']) {
             $args = [];
             $args['user_id'] = $item->id;
+            $args['media_id'] = 0;
             $args['display_name'] = $item->data['name'];
             $args['bio'] = '';
             $account = Account::create($args);

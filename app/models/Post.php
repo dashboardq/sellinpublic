@@ -94,13 +94,13 @@ class Post extends Model {
             $args['original_id'] = 0;
         }
         if(!isset($args['type'])) {
-            if(isset($args['parent_id'])) {
+            if(isset($args['parent_id']) && $args['parent_id'] != 0) {
                 $args['type'] = 'reply';
             } else {
                 $args['type'] = 'post';
             }
         }
-        if(isset($args['parent_id'])) {
+        if(isset($args['parent_id']) && $args['parent_id'] != 0) {
             $parent = Post::find($args['parent_id']);
             if(!$parent) {
                 throw new Exception('The passed in parent id does not appear to be valid.');
@@ -133,7 +133,7 @@ class Post extends Model {
         $starred = false;
 
         $user_id = ao()->request->user_id ?? 0;
-        if($user_id) {
+        if($user_id && isset($data['id'])) {
             $args = [];
             $args['user_id'] = $user_id;
             $args['post_id'] = $data['id'];
@@ -152,6 +152,12 @@ class Post extends Model {
         $data['replied'] = $replied;
         $data['flagged'] = $flagged;
         $data['starred'] = $starred;
+
+        if(isset($data['attachment_count']) && $data['attachment_count']) {
+            $data['attachments'] = Attachment::where(['post_id' => $this->id], 'data');
+        } else {
+            $data['attachments'] = [];
+        }
 
         return $data;
     }

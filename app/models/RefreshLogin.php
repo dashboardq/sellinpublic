@@ -13,7 +13,8 @@ class RefreshLogin extends Model {
 
     public static function create($args) {
         // Delete old refresh hashes
-        ao()->db->query('DELETE FROM refresh_logins WHERE user_id = ?', $args['user_id']);
+        //ao()->db->query('DELETE FROM refresh_logins WHERE user_id = ?', $args['user_id']);
+        ao()->db->query('DELETE FROM refresh_logins WHERE user_id = ? AND expired_at < ?', $args['user_id'], now());
 
         // We don't want this to be too long otherwise we run into bcrypt 72 byte limit:
         // https://crypto.stackexchange.com/questions/24993/is-there-a-way-to-use-bcrypt-with-passwords-longer-than-72-bytes-securely
@@ -76,12 +77,14 @@ class RefreshLogin extends Model {
             $args = [];
             $args['user_id'] = $user_id;
             $args['expired_at'] = ['>', now()];
-            $refresh_login = RefreshLogin::by($args);
+            $refresh_logins = RefreshLogin::where($args);
 
-            if(password_verify($password, $refresh_login->all['refresh_hash'])) {
-                $user = User::find($user_id);
-                if($user) {
-                    return ['user' => $user, 'user_id' => $user_id];
+            $user = User::find($user_id);
+            if($user) {
+                foreach($refresh_logins as $refresh_login) {
+                    if($refresh_login && password_verify($password, $refresh_login->all['refresh_hash'])) {
+                        return ['user' => $user, 'user_id' => $user_id];
+                    }
                 }
             }
         }

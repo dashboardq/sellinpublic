@@ -1,15 +1,152 @@
 (function() {
 
+    function changeFileProfile(e) {
+        // Max size is 1MB
+        var max_total_bytes = 1 * 1024 * 1024;
+        var $el = e.target;
+        var $profile = $el.closest('.profile');
+        var $img = $profile.querySelector('img');
+        var $node;
+        var $parent;
+        var $media_id = ao.qs('[name=media_id]');
+        var url = '/ajax/upload/create';
+        var url_chunked = '';
+        var url_completed = '';
+        var payload = {};
+        var data;
+        var file;
+
+        if($el.files && $el.files[0]) {
+            file = $el.files[0];
+            console.log(file);
+            if(file.size > max_total_bytes) {
+                _ao.error('The selected file is too large. Files cannot exceed 1MB.');
+                $el.value = '';
+            } else {
+                ao.qs('#processing.overlay').classList.add('show');
+
+                payload.total_bytes = file.size;
+                payload.name = file.name;
+                payload.extension = '.invalid';
+                payload.upload_type = 'profile';
+                if(file.type == 'image/png') {
+                    payload.extension = '.png';
+                } else {
+                    payload.name = 'profile';
+                    payload.extension = '.jpg';
+                }
+                ao.post(url, payload, function(err, response) {
+                    if(err) {
+                        ao.qs('#processing.overlay').classList.remove('show');
+                        _ao.error(response);
+                        $el.value = '';
+                    } else {
+                        data = JSON.parse(response);
+                        url_chunked = '/ajax/upload/' + data.id + '/chunked';
+                        url_completed = '/ajax/upload/' + data.id + '/completed';
+                        chunk(url_chunked, file, 0, function(err, response, total_chunks) {
+                            if(err) {
+                                ao.qs('#processing.overlay').classList.remove('show');
+                                _ao.error(response);
+                                $el.value = '';
+                            } else {
+                                payload = {};
+                                payload.total_chunks = total_chunks;
+                                ao.post(url_completed, payload, function(err, response) {
+                                    if(err) {
+                                        ao.qs('#processing.overlay').classList.remove('show');
+                                        _ao.error(response);
+                                        $el.value = '';
+                                    } else {
+                                        data = JSON.parse(response);
+                                        $media_id.value = data.id;
+                                        $img.src = data.url;
+                                        $node = document.createElement('div');
+                                        $node.innerHTML = '<div class="notice warn"><p>Press the update button below to save the uploaded image as your profile image.</p></div>';
+                                        $parent = $profile.parentNode;
+                                        $parent.insertBefore($node, $profile);
+                                        ao.qs('#processing.overlay').classList.remove('show');
+                                        $el.value = '';
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+
+            }
+        }
+    }
+
+    function chunk(url, file, index, cb) {
+        //var chunk_size = 1024;
+        var chunk_size = 1 * 1024 * 1024;
+        var size = file.size;
+        var sent = index * chunk_size;
+        var new_sent = sent + chunk_size;
+        var payload = {};
+        var blob = file.slice(sent, new_sent);
+        var reader = new FileReader();
+        var payload = new FormData();
+        payload.append('index', index);
+        payload.append('chunk', blob);
+
+        //payload.index = index;
+        //payload.chunk = reader.readAsBinaryString(blob);
+
+        ao.post(url, payload, function(err, response) {
+            if(err) {
+                cb(err, response);
+            } else {
+                if(new_sent < size) {
+                    index++
+                    chunk(url, file, index, cb);
+                } else {
+                    // Increase one more time for the total.
+                    index++
+                    cb(err, response, index);
+                }
+            }
+        });
+    }
+
+    function clickAddText(e) {
+        var $counter = ao.qs('[name=attachment_count]');
+        var attachments = $counter.value;
+        var $attachments = ao.qs('.attachments');
+        var $div = document.createElement('div');
+        $div.innerHTML = '<div class="attachment attachment_type_text"><input type="hidden" name="attachment_type_' + attachments + '" value="text" /><p><button class="remove_attachment">Remove</button></p><textarea name="attachment_text_' + attachments + '" placeholder="Add additional content..."></textarea></div>';
+
+        $attachments.appendChild($div.firstChild);
+
+        attachments++;
+        $counter.value = attachments;
+    }
+
     function clickHide(e) {
         var $el = e.target.closest('.shown');
         $el.classList.remove('shown');
         $el.classList.add('hidden');
     }
 
+    function clickRemoveAttachment(e) {
+        var $counter = ao.qs('[name=attachment_count]');
+        var attachments = $counter.value;
+        var $attachment = e.target.closest('.attachment');
+        $attachment.remove();
+
+        attachments--;
+        $counter.value = attachments;
+    }
+
     function clickShow(e) {
         var $el = e.target.closest('.hidden');
         $el.classList.remove('hidden');
         $el.classList.add('shown');
+    }
+
+    function clickUpload(e) {
+        e.target.closest('.profile').querySelector('.file');
     }
 
     function close(e) {
@@ -211,7 +348,14 @@
         ao.listen('click', '.show', clickShow);
         ao.listen('click', '.hide', clickHide);
 
+        ////ao.listen('click', '.page_account .profile button', clickUpload);
+
         ao.listen('input', 'textarea', inputTextarea);
+
+        ao.listen('change', '.profile [type=file]', changeFileProfile);
+
+        ao.listen('click', '.remove_attachment', clickRemoveAttachment);
+        ao.listen('click', '.add_text', clickAddText);
     }
 
     init();

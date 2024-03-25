@@ -196,7 +196,7 @@ class DB {
             // when initially starting out.
             // This won't work: https://code.djangoproject.com/ticket/9302
             //$output = $this->pdo->lastInsertId($this->last_insert_table . '_' . 'id' . '_' . 'seq');
-        $output = $this->pdo->lastInsertId();
+            $output = $this->pdo->lastInsertId();
         }
         return $output;
     }

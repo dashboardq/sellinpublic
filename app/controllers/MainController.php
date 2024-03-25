@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Post;
+use app\models\RefreshLogin;
 
 use app\services\APIService;
 
@@ -67,5 +68,10 @@ class MainController {
     public function terms($req, $res) {
         //$res->view('main/terms', ['title' => 'Terms of Use']);
         return ['title' => 'Terms of Use'];
+    }
+
+    public function test($req, $res) {
+        $title = 'Test';
+        return compact('title');
     }
 }

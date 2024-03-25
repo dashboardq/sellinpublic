@@ -18,22 +18,13 @@
 
                 <?php foreach($reactions as $reaction): ?>
                 <div class="depth depth_0">
-                    <div class="post">
-                        <div class="meta">
-                            <span class="profile"><?php esc(substr($reaction['post']['username'], 0, 1)); ?></span> 
-                            <span class="name"><?php esc($reaction['post']['display_name']); ?></span> 
-                            @<a href="/<?php esc($reaction['post']['username']); ?>" class="username"><?php esc($reaction['post']['username']); ?></a> 
-                            <a href="/<?php esc($reaction['post']['username']); ?>/<?php esc($reaction['post']['id']); ?>" class="published_at"><?php esc(elapsed($reaction['post']['published_tz'])); ?></a> 
-                        </div>
-                        <p><?php echo nl2br(_esc($reaction['post']['post'])); ?></p>
-                        <?php $res->partial('post_actions', ['post' => $reaction['post']]); ?>
-                    </div>
+                    <?php $res->partial('post', ['post' => $reaction['post']]); ?>
                 </div>
 
                 <div class="depth depth_1">
                     <div class="post">
                         <div class="meta">
-                            <span class="profile"><?php esc(substr($reaction['user']['username'], 0, 1)); ?></span> 
+                            <span class="profile"><img src="<?php esc($reaction['user']['profile_image_url']); ?>" alt="Profile image" /></span> 
                             <span class="name"><?php esc($reaction['user']['display_name']); ?></span> 
                             @<a href="/<?php esc($reaction['user']['username']); ?>" class="username"><?php esc($reaction['user']['username']); ?></a> 
                             <a href="/<?php esc($reaction['post']['username']); ?>/<?php esc($reaction['post']['id']); ?>" class="published_at"><?php esc(elapsed($reaction['created_tz'])); ?></a> 

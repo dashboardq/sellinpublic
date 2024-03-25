@@ -77,6 +77,9 @@ class Validate {
             }
 
             // The $checks are the array of actual rules, $rule is each individual rule.
+            if(!is_array($checks)) {
+                $checks = [$checks];
+            }
             $last_rule = '';
             foreach($checks as $rule) {
                 // The $input is the entire data array.

@@ -35,6 +35,10 @@ Route::get('api/v0/settings', ['APISettingsController', 'settings'], 'private');
 
 Route::post('api/v0/account', ['APIAccountsController', 'update'], 'private');
 
+Route::post('api/v0/upload', ['APIUploadsController', 'create'], 'private');
+Route::post('api/v0/upload/{upload_id}/chunked', ['APIUploadsController', 'chunked'], 'private');
+Route::post('api/v0/upload/{upload_id}/completed', ['APIUploadsController', 'completed'], 'private');
+
 Route::get('api/v0/notifications', ['APINotificationsController', 'list'], 'private');
 Route::get('api/v0/notifications/count', ['APINotificationsController', 'count'], 'private');
 Route::get('api/v0/notifications/count/unread', ['APINotificationsController', 'countUnread'], 'private');

@@ -55,7 +55,7 @@ class APIReactionsController {
         $output['messages'] = [];
         //$output['meta'] = meta($pagination);
         $output['meta'] = ['pagination' => $pagination];
-        $output['data'] = data($reactions);
+        $output['data'] = $reactions;
         return $output;
     }
 
@@ -75,7 +75,7 @@ class APIReactionsController {
         $output['messages'] = [];
         //$output['meta'] = meta($pagination);
         $output['meta'] = ['pagination' => $pagination];
-        $output['data'] = data($posts);
+        $output['data'] = $posts;
         return $output;
     }
 
@@ -123,7 +123,7 @@ class APIReactionsController {
         $output['messages'] = [];
         //$output['meta'] = meta($pagination);
         $output['meta'] = ['pagination' => $pagination];
-        $output['data'] = data($posts);
+        $output['data'] = $posts;
         return $output;
     }
 
@@ -142,7 +142,7 @@ class APIReactionsController {
         $output['messages'] = [];
         //$output['meta'] = meta($pagination);
         $output['meta'] = ['pagination' => $pagination];
-        $output['data'] = data($posts);
+        $output['data'] = $posts;
         return $output;
     }
 
@@ -162,7 +162,7 @@ class APIReactionsController {
         $output['messages'] = [];
         //$output['meta'] = meta($pagination);
         $output['meta'] = ['pagination' => $pagination];
-        $output['data'] = data($posts);
+        $output['data'] = $posts;
         return $output;
     }
 

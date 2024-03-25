@@ -26,40 +26,41 @@
                     <p>Below is the expected result from that cURL call:</p>
                     <div class="code">
                         <pre>
-{                                                                                                                                                    
+{                        
   "status": "success",                                                    
   "messages": [],                                                         
   "meta": {                                                               
     "pagination": {                                                       
-      "total_results": 2,                                                                                                                            
-      "total_pages": 1,          
-      "page_previous": 1,                                                                                                                            
-      "page_next": 1,                                                     
-      "page_current": 1,                                                  
+      "total_results": 2,     
+      "total_pages": 1,                                                                                                                              
+      "page_previous": 1,     
+      "page_next": 1,    
+      "page_current": 1,  
       "current_page": 1,                                                                                                                             
       "current_result": 1,                                                
-      "current_result_first": 1,                                          
-      "current_result_last": 2,                                           
-      "url_next": "/api/v0/notifications?page=1",                         
-      "url_previous": "/api/v0/notifications?page=1"                      
-    }                                                                     
-  }, 
-  "data": [                                                                                                                                          
-    {
-      "id": 2,
-      "receiver_id": 1,
-      "receiver_post_id": 2,
+      "current_result_first": 1,
+      "current_result_last": 2,     
+      "url_next": "/api/v0/notifications?page=1",
+      "url_previous": "/api/v0/notifications?page=1"                                                                                                 
+    }                                                                                                                                                
+  },  
+  "data": [              
+    {                                                                     
+      "id": 2,                                                            
+      "receiver_id": 1,                                                   
+      "receiver_post_id": 2,                                              
       "initiator_id": 3,
       "initiator_post_id": 4,
       "type": "reply",
       "status": "unread",
       "content": null,
-      "created_at": "2024-03-08T07:07:56+00:00",
-      "updated_at": "2024-03-08T07:07:56+00:00",
+      "created_at": "2024-03-23T05:46:24+00:00",
+      "updated_at": "2024-03-23T05:46:24+00:00",
       "initiator": {
         "display_name": "Good",
         "username": "good",
-        "bio": ""
+        "bio": "",
+        "profile_image_url": "https://sandbox.sellinpublic.com/media/100/profile_1.png"
       },
       "initiator_post": {
         "id": 4,
@@ -68,29 +69,34 @@
         "parent_id": 2,
         "original_id": 0,
         "post": "Feel free to start testing today! Checkout the API documentation if you need help:\nhttps://sellinpublic.com/documentation",
-        "content": null,
         "status": "published",
         "type": "reply",
         "depth": 1,
         "sort_order": "0000000002/0000000000/0000000000/00000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000",
-        "standing_calculated": 1,
+        "attachment_count": 0,
         "replies": 0,
         "reposts": 0,
         "quotes": 0,
         "stars": 0,
         "flags": 0,
         "reactions": 0,
-        "created_at": "2024-03-08T07:07:56+00:00",
-        "updated_at": "2024-03-08T07:07:56+00:00",
-        "published_at": "2024-03-08T07:07:56+00:00",
-        "sorted_at": "2024-03-08T07:07:56+00:00",
+        "bumps": 0,
+        "created_at": "2024-03-23T05:46:24+00:00",
+        "updated_at": "2024-03-23T05:46:24+00:00",
+        "published_at": "2024-03-23T05:46:24+00:00",
+        "sorted_at": "2024-03-23T05:46:24+00:00",
         "username": "good",
         "replied": false,
         "flagged": false,
         "starred": false,
-        "sorted_tz": "2024-03-08T07:07:56+00:00",
-        "display_name": "Good",
-        "bio": ""
+        "attachments": [],
+        "user": {
+          "user_id": 3,
+          "username": "good",
+          "display_name": "Good",
+          "bio": "",
+          "profile_image_url": "https://sandbox.sellinpublic.com/media/100/profile_1.png"
+        }
       },
       "receiver_post": {
         "id": 2,
@@ -99,29 +105,34 @@
         "parent_id": 0,
         "original_id": 0,
         "post": "Welcome to the Sandbox server where you can test the interface and API interactions!",
-        "content": null,
         "status": "published",
         "type": "post",
         "depth": 0,
         "sort_order": null,
-        "standing_calculated": 1,
+        "attachment_count": 0,
         "replies": 3,
         "reposts": 0,
         "quotes": 0,
         "stars": 1,
         "flags": 0,
         "reactions": 0,
-        "created_at": "2024-03-08T05:52:56+00:00",
-        "updated_at": "2024-03-08T09:52:57+00:00",
-        "published_at": "2024-03-08T05:52:56+00:00",
-        "sorted_at": "2024-03-08T09:51:57+00:00",
+        "bumps": 0,
+        "created_at": "2024-03-23T04:31:24+00:00",
+        "updated_at": "2024-03-23T08:31:25+00:00",
+        "published_at": "2024-03-23T04:31:24+00:00",
+        "sorted_at": "2024-03-23T08:30:25+00:00",
         "username": "demo",
         "replied": false,
         "flagged": false,
         "starred": true,
-        "sorted_tz": "2024-03-08T09:51:57+00:00",
-        "display_name": "Demo Updated",
-        "bio": ""
+        "attachments": [],
+        "user": {
+          "user_id": 1,
+          "username": "demo",
+          "display_name": "Demo",
+          "bio": "",
+          "profile_image_url": "https://sandbox.sellinpublic.com/media/alphabet/d.png"
+        }
       }
     },
     {
@@ -133,12 +144,13 @@
       "type": "reply",
       "status": "read",
       "content": null,
-      "created_at": "2024-03-08T06:52:56+00:00",
-      "updated_at": "2024-03-08T06:52:56+00:00",
+      "created_at": "2024-03-23T05:31:24+00:00",
+      "updated_at": "2024-03-23T05:31:24+00:00",
       "initiator": {
         "display_name": "Sandbox",
         "username": "sandbox",
-        "bio": ""
+        "bio": "",
+        "profile_image_url": "https://sandbox.sellinpublic.com/media/alphabet/s.png"
       },
       "initiator_post": {
         "id": 3,
@@ -147,29 +159,34 @@
         "parent_id": 2,
         "original_id": 0,
         "post": "You can post replies.",
-        "content": null,
         "status": "published",
         "type": "reply",
         "depth": 1,
         "sort_order": "0000000001/0000000000/0000000000/00000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000",
-        "standing_calculated": 1,
+        "attachment_count": 0,
         "replies": 1,
         "reposts": 0,
         "quotes": 0,
         "stars": 0,
         "flags": 0,
         "reactions": 0,
-        "created_at": "2024-03-08T06:52:56+00:00",
-        "updated_at": "2024-03-08T06:52:56+00:00",
-        "published_at": "2024-03-08T06:52:56+00:00",
-        "sorted_at": "2024-03-08T06:52:56+00:00",
+        "bumps": 0,
+        "created_at": "2024-03-23T05:31:24+00:00",
+        "updated_at": "2024-03-23T05:31:24+00:00",
+        "published_at": "2024-03-23T05:31:24+00:00",
+        "sorted_at": "2024-03-23T05:31:24+00:00",
         "username": "sandbox",
         "replied": false,
         "flagged": false,
         "starred": false,
-        "sorted_tz": "2024-03-08T06:52:56+00:00",
-        "display_name": "Sandbox",
-        "bio": ""
+        "attachments": [],
+        "user": {
+          "user_id": 2,
+          "username": "sandbox",
+          "display_name": "Sandbox",
+          "bio": "",
+          "profile_image_url": "https://sandbox.sellinpublic.com/media/alphabet/s.png"
+        }
       },
       "receiver_post": {
         "id": 2,
@@ -178,29 +195,34 @@
         "parent_id": 0,
         "original_id": 0,
         "post": "Welcome to the Sandbox server where you can test the interface and API interactions!",
-        "content": null,
         "status": "published",
         "type": "post",
         "depth": 0,
         "sort_order": null,
-        "standing_calculated": 1,
+        "attachment_count": 0,
         "replies": 3,
         "reposts": 0,
         "quotes": 0,
         "stars": 1,
         "flags": 0,
         "reactions": 0,
-        "created_at": "2024-03-08T05:52:56+00:00",
-        "updated_at": "2024-03-08T09:52:57+00:00",
-        "published_at": "2024-03-08T05:52:56+00:00",
-        "sorted_at": "2024-03-08T09:51:57+00:00",
+        "bumps": 0,
+        "created_at": "2024-03-23T04:31:24+00:00",
+        "updated_at": "2024-03-23T08:31:25+00:00",
+        "published_at": "2024-03-23T04:31:24+00:00",
+        "sorted_at": "2024-03-23T08:30:25+00:00",
         "username": "demo",
         "replied": false,
         "flagged": false,
         "starred": true,
-        "sorted_tz": "2024-03-08T09:51:57+00:00",
-        "display_name": "Demo Updated",
-        "bio": ""
+        "attachments": [],
+        "user": {
+          "user_id": 1,
+          "username": "demo",
+          "display_name": "Demo",
+          "bio": "",
+          "profile_image_url": "https://sandbox.sellinpublic.com/media/alphabet/d.png"
+        }
       }
     }
   ]
